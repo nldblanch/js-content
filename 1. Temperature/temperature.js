@@ -6,7 +6,12 @@ function fahrenheitToCelsius(fahrenheit) {
   // Your code here
 }
 
+function displayTemperature(temperature, option) {
+  // Your code here
+}
+
 module.exports = {
   celsiusToFahrenheit,
   fahrenheitToCelsius,
+  displayTemperature
 };

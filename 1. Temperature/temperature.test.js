@@ -1,7 +1,7 @@
-const { celsiusToFahrenheit, fahrenheitToCelsius } = require("./temperature");
+const { celsiusToFahrenheit, fahrenheitToCelsius, displayTemperature } = require("./temperature");
 
-describe("Temperature Converter - TDD Challenge", () => {
-  describe("Step 1: celsiusToFahrenheit - Basic Conversions", () => {
+describe("Temperature Converter", () => {
+  describe.skip("Step 1: celsiusToFahrenheit - Basic Conversions", () => {
     test("converts 0°C to 32°F (freezing point)", () => {
       expect(celsiusToFahrenheit(0)).toBe(32);
     });
@@ -57,7 +57,7 @@ describe("Temperature Converter - TDD Challenge", () => {
     });
   });
 
-  describe.skip("Challenge: Round-trip Conversions", () => {
+  describe.skip("Round-trip Conversions", () => {
     test("round-trip conversion maintains precision", () => {
       const originalCelsius = 25;
       const fahrenheit = celsiusToFahrenheit(originalCelsius);
@@ -73,7 +73,7 @@ describe("Temperature Converter - TDD Challenge", () => {
     });
   });
 
-  describe.skip("Bonus: Extreme Temperatures", () => {
+  describe.skip("Extreme Temperatures", () => {
     test("handles very high temperatures", () => {
       expect(celsiusToFahrenheit(1000)).toBe(1832);
       expect(fahrenheitToCelsius(1832)).toBeCloseTo(1000, 1);
@@ -83,5 +83,19 @@ describe("Temperature Converter - TDD Challenge", () => {
       expect(celsiusToFahrenheit(-273)).toBeCloseTo(-459.4, 1);
       expect(fahrenheitToCelsius(-459.4)).toBeCloseTo(-273, 1);
     });
+  });
+  describe.skip('Step 5: displayTemperature', () => {
+    test('correctly displays temperature when given in celsius', () => {
+      expect(displayTemperature(40, 'celsius')).toBe('The temperature is 40 degrees celsius, 104 degrees fahrenheit.')
+      expect(displayTemperature(0, 'celsius')).toBe('The temperature is 0 degrees celsius, 32 degrees fahrenheit.')
+    })
+    test('correctly displays temperature when given in fahrenheit', () => {
+      expect(displayTemperature(212, 'fahrenheit')).toBe('The temperature is 100 degrees celsius, 212 degrees fahrenheit.');
+      expect(displayTemperature(-40, 'fahrenheit')).toBe('The temperature is -40 degrees celsius, -40 degrees fahrenheit.');
+    })
+    test('handles invalid options for temperature', () => {
+      expect(displayTemperature(273, 'kelvin')).toBe('Invalid temperature option provided.')
+      expect(displayTemperature(273)).toBe('Invalid temperature option provided.')
+    })
   });
 });

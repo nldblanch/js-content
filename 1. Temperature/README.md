@@ -2,20 +2,17 @@
 
 ## Objective
 
-Create a temperature converter that can convert between Celsius and Fahrenheit using Test-Driven Development (TDD).
+Create a temperature converter that can convert between Celsius and Fahrenheit.
 
 ## Learning Goals
 
 - Work with JavaScript functions and mathematical operations
 - Learn to write clean, testable code
 
-## Requirements
+## Useful Formulas
 
-- Create a function `celsiusToFahrenheit` that takes a Celsius temperature and returns the Fahrenheit equivalent
-- Create a function `fahrenheitToCelsius` that takes a Fahrenheit temperature and returns the Celsius equivalent
-- Use the formulas:
-  - Celsius to Fahrenheit: `(celsius * 9/5) + 32`
-  - Fahrenheit to Celsius: `(fahrenheit - 32) * 5/9`
+- Celsius to Fahrenheit: `(celsius * 9/5) + 32`
+- Fahrenheit to Celsius: `(fahrenheit - 32) * 5/9`
 
 ## Getting Started
 
@@ -28,18 +25,10 @@ Create a temperature converter that can convert between Celsius and Fahrenheit u
 
 ### Option 2: Practice Test-Driven Development
 
-1. Write the code to pass the tests
-2. Remove `.skip` blocks from `describe` blocks.
-3. Add functionality until all tests pass.
-
-## Example Usage
-
-```javascript
-celsiusToFahrenheit(0); // Returns 32
-celsiusToFahrenheit(100); // Returns 212
-fahrenheitToCelsius(32); // Returns 0
-fahrenheitToCelsius(212); // Returns 100
-```
+1. Read the [Function Documentation](#function-documentation) 
+2. Write the code to pass the tests
+3. Remove `.skip` blocks from `describe` blocks.
+4. Add functionality until all tests pass.
 
 ## Files in This Challenge
 
@@ -47,15 +36,105 @@ fahrenheitToCelsius(212); // Returns 100
 - `temperature.js` - Your solution file
 - `temperature.test.js` - Test suite with incremental challenges
 
-## Hints
-
-- Start with the basic conversions (0°C, 100°C)
-- Remember that -40°C = -40°F (same temperature!)
-- Consider edge cases like very high/low temperatures
-
 ## Success Criteria
 
 - All tests pass
 - Functions handle positive and negative temperatures
 - Round-trip conversions maintain precision
-- Code is clean and well-commented
+- Code is clean and readable
+
+<br >
+<br >
+<br >
+
+# Function Documentation
+
+## What's Included
+
+1. [celsiusToFahrenheit](#celsiustofahrenheit)
+2. [fahrenheitToCelsius](#fahrenheitToCelsius)
+3. [displayTemperature](#displayTemperature)
+
+## celsiusToFahrenheit
+
+The `celsiusToFahrenheit` method receives the temperature in celsius and converts it to fahrenheit, returning an exact number. 
+
+### Syntax
+
+```javascript
+celsiusToFahrenheit(celsius);
+```
+
+#### Parameters
+
+`celsius`
+
+A number to convert to fahrenheit.
+
+#### Return value
+A decimal number representing the exact temperature in fahrenheit.
+
+### Example Usage
+
+```javascript
+celsiusToFahrenheit(0); // Returns 32
+celsiusToFahrenheit(100); // Returns 212
+```
+
+## fahrenheitToCelsius
+
+The `fahrenheitToCelsius` method receives the temperature in fahrenheit and converts it to celsius, returning an exact number. 
+
+### Syntax
+
+```javascript
+fahrenheitToCelsius(fahrenheit);
+```
+
+#### Parameters
+
+`fahrenheit`
+
+A number to convert to celsius.
+
+#### Return value
+A decimal number representing the exact temperature in celsius.
+
+### Example Usage
+
+```javascript
+fahrenheitToCelsius(32); // Returns 0
+fahrenheitToCelsius(212); // Returns 100
+```
+
+## displayTemperature
+
+The `displayTemperature` method receives the temperature and an option describing the format of the temperature. It then returns a formatted string containing the temperature in celsius and fahrenheit.
+
+### Syntax
+
+```javascript
+displasyTemperature(temperature, option);
+```
+
+#### Parameters
+
+`temperature`
+
+A number representing the exact temperature.
+
+`option`
+
+A string representing whether the temperature is in celsius or fahrenheit.
+
+#### Return value
+A string displaying the temperature (rounded down) in both celsius and fahrenheit.
+
+### Example Usage
+
+```javascript
+displayTemperature(40, 'celsius'); 
+// Returns 'The temperature is 40 degrees celsius, 92 degrees fahrenheit.'
+displayTemperature(212, 'fahrenheit'); 
+// Returns 'The temperature is 212 degrees fahrenheit, 40 degrees celsius.'
+```
