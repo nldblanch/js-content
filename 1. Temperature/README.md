@@ -52,8 +52,8 @@ Create a temperature converter that can convert between Celsius and Fahrenheit.
 ## What's Included
 
 1. [celsiusToFahrenheit](#celsiustofahrenheit)
-2. [fahrenheitToCelsius](#fahrenheitToCelsius)
-3. [displayTemperature](#displayTemperature)
+2. [fahrenheitToCelsius](#fahrenheittocelsius)
+3. [displayTemperature](#displaytemperature)
 
 ## celsiusToFahrenheit
 

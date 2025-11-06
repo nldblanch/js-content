@@ -47,7 +47,7 @@ Create a dog age calculator that converts human years to dog years.
 
 ## What's Included
 
-1. [calculateDogAge](#calculateDogAge)
+1. [calculateDogAge](#calculatedogage)
 
 ## calculateDogAge
 

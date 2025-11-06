@@ -14,8 +14,8 @@ Create a Magic 8 Ball in JavaScript that generates a random answer. If you wish 
 
 ## What's Included
 
-1. [magicEightBall](#magicEightBall)
-2. [logMagicEightBall](#logMagicEightBall)
+1. [magicEightBall](#magiceightball)
+2. [logMagicEightBall](#logmagiceightball)
 
 ## magicEightBall
 
