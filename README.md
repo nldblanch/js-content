@@ -41,10 +41,16 @@ Each challenge is in its own directory with:
 6. **[Sleep Calculator](6.%20Sleep%20Calculator/)** - Calculate sleep debt
 7. **[Coded Message](7.%20Coded%20Message/)** - Decode secret messages
 8. **[Whale Talk](8.%20Whale%20Talk/)** - Translate to whale language
-9. **[Choose the Correct Iterator](9.%20Choose%20the%20Correct%20Iterator/)** - Practice with array methods
-10. **[Grammar Checker](10.%20Grammar%20Checker/)** - Check and fix grammar
-11. **[Menu Maker](11.%20Menu%20Maker/)** - Create dynamic menus
-12. **[Team Sports](12.%20Team%20Sports/)** - Manage team rosters
+9. **[Choose the Correct Iterator](9.%20Choose%20the%20Correct%20Iterator/)*** - Practice with array methods
+10. **[Grammar Checker](10.%20Grammar%20Checker/)**** - Check and fix grammar
+11. **[Menu Maker](11.%20Menu%20Maker/)**** - Create dynamic menus
+12. **[Team Sports](12.%20Team%20Sports/)**** - Manage team rosters
+
+<br />
+
+_*This challenge is still in the Proof of Concept stage. There may be problems or inconsistencies._
+
+_**These challenges have not been migrated to the new format yet. Please refer to the pdf_instructions._
 
 ## How to Use
 
