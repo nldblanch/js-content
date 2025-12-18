@@ -67,7 +67,30 @@ npm install
 pnpm install
 ```
 
-2. Start the development server:
+2. Ensure you are within the correct directory
+
+Your directory should look like this in the console:
+```(your-file-path)\js-content\9. Choose the Correct Iterator\web-utils```
+
+For example, if you were in the js-content folder, you would run these two commands:
+
+```bash
+cd 9. Choose the Correct Iterator
+```
+
+Then,
+
+```bash
+cd web-utils
+```
+
+3. Install further dependencies
+
+```bash
+npm i
+```
+
+4. Start the development server:
 
 ```bash
 npm run dev
@@ -75,7 +98,7 @@ npm run dev
 pnpm dev
 ```
 
-3. Open your browser to [http://localhost:3000](http://localhost:3000)
+5. Open your browser to [http://localhost:3000](http://localhost:3000)
 
 ## How It Works
 
