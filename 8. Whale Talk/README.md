@@ -16,10 +16,9 @@ It doesn't matter how you solve this challenge. The tests only check the output,
 
 - Function correctly identifies vowels (a, e, i, o, u)
 - Consonants and 'y' are ignored
-- Vowels 'e' and 'u' are doubled
+- Vowels 'e' and 'u' are doubled. Eg: 'e' -> 'ee' & 'u' -> 'uu'
 - Output is in uppercase
 - All test cases pass
-
 
 <br >
 <br >
