@@ -1,7 +1,11 @@
-const { celsiusToFahrenheit, fahrenheitToCelsius, displayTemperature } = require("./temperature");
+const {
+  celsiusToFahrenheit,
+  fahrenheitToCelsius,
+  displayTemperature,
+} = require("./temperature");
 
 describe("Temperature Converter", () => {
-  describe.skip("Step 1: celsiusToFahrenheit - Basic Conversions", () => {
+  describe("Step 1: celsiusToFahrenheit - Basic Conversions", () => {
     test("converts 0°C to 32°F (freezing point)", () => {
       expect(celsiusToFahrenheit(0)).toBe(32);
     });
@@ -15,7 +19,7 @@ describe("Temperature Converter", () => {
     });
   });
 
-  describe.skip("Step 2: celsiusToFahrenheit - Edge Cases", () => {
+  describe("Step 2: celsiusToFahrenheit - Edge Cases", () => {
     test("converts -40°C to -40°F (same temperature)", () => {
       expect(celsiusToFahrenheit(-40)).toBe(-40);
     });
@@ -29,7 +33,7 @@ describe("Temperature Converter", () => {
     });
   });
 
-  describe.skip("Step 3: fahrenheitToCelsius - Basic Conversions", () => {
+  describe("Step 3: fahrenheitToCelsius - Basic Conversions", () => {
     test("converts 32°F to 0°C (freezing point)", () => {
       expect(fahrenheitToCelsius(32)).toBe(0);
     });
@@ -43,7 +47,7 @@ describe("Temperature Converter", () => {
     });
   });
 
-  describe.skip("Step 4: fahrenheitToCelsius - Edge Cases", () => {
+  describe("Step 4: fahrenheitToCelsius - Edge Cases", () => {
     test("converts -40°F to -40°C (same temperature)", () => {
       expect(fahrenheitToCelsius(-40)).toBe(-40);
     });
@@ -57,7 +61,7 @@ describe("Temperature Converter", () => {
     });
   });
 
-  describe.skip("Round-trip Conversions", () => {
+  describe("Round-trip Conversions", () => {
     test("round-trip conversion maintains precision", () => {
       const originalCelsius = 25;
       const fahrenheit = celsiusToFahrenheit(originalCelsius);
@@ -73,7 +77,7 @@ describe("Temperature Converter", () => {
     });
   });
 
-  describe.skip("Extreme Temperatures", () => {
+  describe("Extreme Temperatures", () => {
     test("handles very high temperatures", () => {
       expect(celsiusToFahrenheit(1000)).toBe(1832);
       expect(fahrenheitToCelsius(1832)).toBeCloseTo(1000, 1);
@@ -84,18 +88,31 @@ describe("Temperature Converter", () => {
       expect(fahrenheitToCelsius(-459.4)).toBeCloseTo(-273, 1);
     });
   });
-  describe.skip('Step 5: displayTemperature', () => {
-    test('correctly displays temperature when given in celsius', () => {
-      expect(displayTemperature(40, 'celsius')).toBe('The temperature is 40 degrees celsius, 104 degrees fahrenheit.')
-      expect(displayTemperature(0, 'celsius')).toBe('The temperature is 0 degrees celsius, 32 degrees fahrenheit.')
-    })
-    test('correctly displays temperature when given in fahrenheit', () => {
-      expect(displayTemperature(212, 'fahrenheit')).toBe('The temperature is 100 degrees celsius, 212 degrees fahrenheit.');
-      expect(displayTemperature(-40, 'fahrenheit')).toBe('The temperature is -40 degrees celsius, -40 degrees fahrenheit.');
-    })
-    test('handles invalid options for temperature', () => {
-      expect(displayTemperature(273, 'kelvin')).toBe('Invalid temperature option provided.')
-      expect(displayTemperature(273)).toBe('Invalid temperature option provided.')
-    })
+
+  describe("Step 5: displayTemperature", () => {
+    test("correctly displays temperature when given in celsius", () => {
+      expect(displayTemperature(40, "celsius")).toBe(
+        "The temperature is 40 degrees celsius, 104 degrees fahrenheit."
+      );
+      expect(displayTemperature(0, "celsius")).toBe(
+        "The temperature is 0 degrees celsius, 32 degrees fahrenheit."
+      );
+    });
+    test("correctly displays temperature when given in fahrenheit", () => {
+      expect(displayTemperature(212, "fahrenheit")).toBe(
+        "The temperature is 100 degrees celsius, 212 degrees fahrenheit."
+      );
+      expect(displayTemperature(-40, "fahrenheit")).toBe(
+        "The temperature is -40 degrees celsius, -40 degrees fahrenheit."
+      );
+    });
+    test("handles invalid options for temperature", () => {
+      expect(displayTemperature(273, "kelvin")).toBe(
+        "Invalid temperature option provided."
+      );
+      expect(displayTemperature(273)).toBe(
+        "Invalid temperature option provided."
+      );
+    });
   });
 });
