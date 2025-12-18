@@ -184,21 +184,21 @@ Navigate to the Pull Request Demo folder:
 cd "Pull Request Demo"
 ```
 
-Open `associates.json` in your code editor and add your information:
+Open `associates.js` in your code editor and add your information:
 
-```json
-{
-  "associates": [
+```js
+const associates = [
     {
-      "name": "Nathan",
-      "academy": "February 2025"
+      name: "Nathan",
+      academy: "February 2025",
+      tip: ""
     },
     {
-      "name": "Your Name",
-      "academy": "Your Cohort (e.g., March 2025)"
+      name: "Your Name",
+      academy: "Your Cohort (e.g., March 2025)",
+      tip: "Submit a pull request to add your name!"
     }
-  ]
-}
+]
 ```
 
 **Important:** Make sure to:
@@ -219,7 +219,7 @@ git status
 Stage your changes:
 
 ```bash
-git add associates.json
+git add associates.js
 ```
 
 Commit your changes with a descriptive message:
@@ -230,7 +230,7 @@ git commit -m "Add [Your Name] to associates list"
 
 **Good Commit Messages:**
 - "Add John Smith to associates list"
-- "Update associates.json with cohort information"
+- "Update associates.js with cohort information"
 - "Update" (too vague)
 - "changes" (not descriptive)
 
@@ -324,7 +324,7 @@ Now you'll submit your changes to the original repository:
      Adds my name to the associates list as part of the Pull Request Demo.
      
      ## Changes made:
-     - Added my name and cohort to associates.json
+     - Add <your name> to associates.js
      ```
 
 5. Click **"Create pull request"**
