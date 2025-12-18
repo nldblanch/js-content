@@ -84,7 +84,7 @@ Then,
 cd web-utils
 ```
 
-3. Unpack the packages.json
+3. Install further dependencies
 
 ```bash
 npm i
