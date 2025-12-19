@@ -431,7 +431,7 @@
             const contributorsList = document.getElementById('contributors-list');
 
             // Sort associates by contributions (descending)
-            const topContributors = Object.entries(commits)
+            const topContributors = Object.entries(commitStats)
                 .filter(([_, contributions]) => contributions > 1) // minimum 2 contributions
                 .sort(([, a], [, b]) => b - a)
                 .slice(0, 3) // Top 3
