@@ -62,13 +62,13 @@ jobs:
           
           // Write to JS file
           const output = `const commitStats = ${JSON.stringify(commitCounts, null, 2)};\n`;
-          fs.writeFileSync('PR docs/commits.js', output);
+          fs.writeFileSync('docs/commits.js', output);
           
-          console.log('Created PR docs/commits.js');
+          console.log('Created docs/commits.js');
           SCRIPT
           
           # Verify the file was created
-          cat "PR docs/commits.js"
+          cat "docs/commits.js"
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
