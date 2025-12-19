@@ -31,13 +31,53 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Fetch Repo Commit Data
+        run: |
+          # Fetch commits and save to JSON
+          curl -L \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/nldblanch/js-content/commits?per_page=100 \
+          -o commits-data.json
+          
+          # Process commits to count by GitHub username
+          node << 'SCRIPT'
+          const fs = require('fs');
+          
+          // Read commits data
+          const commits = JSON.parse(fs.readFileSync('commits-data.json', 'utf8'));
+          
+          // Count commits by GitHub username (author.login)
+          const commitCounts = {};
+          
+          commits.forEach(commit => {
+            const username = commit.author?.login;
+            if (username) {
+              commitCounts[username] = (commitCounts[username] || 0) + 1;
+            }
+          });
+          
+          console.log('Commit counts by username:', commitCounts);
+          
+          // Write to JS file
+          const output = `const commitStats = ${JSON.stringify(commitCounts, null, 2)};\n`;
+          fs.writeFileSync('PR docs/commits.js', output);
+          
+          console.log('Created PR docs/commits.js');
+          SCRIPT
+          
+          # Verify the file was created
+          cat "PR docs/commits.js"
+      
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload docs folder
-          path: 'docs'
+          path: 'PR docs'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

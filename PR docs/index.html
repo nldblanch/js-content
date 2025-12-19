@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Associates</title>
+
+    <style>
+        :root {
+            --primary-color: #00c7c3;
+            --primary-dark: #062832;
+            --text-light: #666;
+            --white: #ffffff;
+            --background: #ffffff;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: var(--background);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary-color);
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-100px) translateX(50px);
+            }
+            50% {
+                transform: translateY(-200px) translateX(-30px);
+            }
+            75% {
+                transform: translateY(-100px) translateX(-50px);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            color: var(--primary-dark);
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .associates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .associate-card {
+            background: var(--primary-dark);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .associate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .associate-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border: 3px solid var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 10px rgba(0, 199, 195, 0.4);
+        }
+
+        .associate-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .associate-academy {
+            font-size: 1rem;
+            color: var(--white);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .academy-icon {
+            font-size: 1.2rem;
+        }
+
+        .associate-tip {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-left: 3px solid var(--white);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .associate-tip:empty {
+            display: none;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .github-link:hover {
+            background: var(--white);
+        }
+
+        .contribution-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--white);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaderboard {
+            /* background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); */
+            background: var(--primary-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .leaderboard h2 {
+            color: var(--white);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(5px);
+        }
+
+        .leaderboard-rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            min-width: 50px;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .leaderboard-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+
+        .leaderboard-academy {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .leaderboard-contributions {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .leaderboard-percentage {
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+        }
+
+        .leaderboard-count {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            padding: 100px 0;
+        }
+
+        .error {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            color: var(--error-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .count-badge {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--primary-dark);
+            margin-top: 60px;
+            opacity: 0.8;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <script src="commits.js"></script>
+    <div class="particles" id="particles"></div>
+    <div class="container">
+        <header>
+            <h1>🎓 Academy Associates</h1>
+            <p class="subtitle">Welcome to our community of learners!</p>
+            <div class="count-badge" id="associateCount">Loading...</div>
+        </header>
+
+        <div class="leaderboard" id="leaderboard">
+            <h2>🏆 Top Contributors</h2>
+            <div class="leaderboard-list" id="leaderboard-list"></div>
+        </div>
+
+        <div id="associates-container" class="loading">
+            Loading associates...
+        </div>
+
+        <footer>
+            <p>Want to add your name? Check out the <a href="https://github.com/nldblanch/js-content/tree/main/Pull%20Request%20Demo">Pull Request Guide</a></p>
+        </footer>
+    </div>
+
+    <script src="associates.js"></script>
+    <script>
+        // Create particle effects
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random size between 5px and 20px
+                const size = Math.random() * 15 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random starting position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation delay and duration
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function getInitials(name) {
+            return name
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase())
+                .join('');
+        }
+
+        function createAssociateCard(associate, index) {
+            const card = document.createElement('div');
+            card.className = 'associate-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.style.position = 'relative';
+
+            const initials = getInitials(associate.name);
+            const contributionBadge = associate.contributions > 0 ? 
+                `<div class="contribution-badge">⭐ ${associate.contributions} PR${associate.contributions !== 1 ? 's' : ''}</div>` : '';
+            const githubLink = associate.github ? 
+                `<a href="https://github.com/${associate.github}" target="_blank" class="github-link">🔗 @${associate.github}</a>` : '';
+
+            card.innerHTML = `
+                ${contributionBadge}
+                <div class="associate-avatar">${initials}</div>
+                <h2 class="associate-name">${associate.name}</h2>
+                <p class="associate-academy">
+                    <span class="academy-icon">📚</span>
+                    ${associate.academy}
+                </p>
+                ${githubLink}
+                ${associate.tip ? `<div class="associate-tip">💡 ${associate.tip}</div>` : ''}
+            `;
+
+            return card;
+        }
+
+        function createLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            
+            // Sort associates by contributions (descending)
+            const topContributors = [...associates]
+                .filter(a => a.contributions > 0)
+                .sort((a, b) => b.contributions - a.contributions)
+                .slice(0, 3); // Top 3
+
+            // Calculate total contributions for percentage
+            const totalContributions = topContributors.reduce((sum, a) => sum + a.contributions, 0);
+
+            topContributors.forEach((associate, index) => {
+                const item = document.createElement('div');
+                item.className = 'leaderboard-item';
+                
+                const percentage = ((associate.contributions / totalContributions) * 100).toFixed(1);
+
+                item.innerHTML = `
+                    <div class="leaderboard-rank">${index + 1}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">${associate.name}</div>
+                        <div class="leaderboard-academy">${associate.academy}</div>
+                    </div>
+                    <div class="leaderboard-contributions">
+                        <div class="leaderboard-percentage">${percentage}%</div>
+                        <div class="leaderboard-count">${associate.contributions} PRs</div>
+                    </div>
+                `;
+                
+                leaderboardList.appendChild(item);
+            });
+
+            // Hide leaderboard if no contributors
+            if (topContributors.length === 0) {
+                document.getElementById('leaderboard').style.display = 'none';
+            }
+        }
+
+        function loadAssociates() {
+            const container = document.getElementById('associates-container');
+            const countBadge = document.getElementById('associateCount');
+
+            try {
+                container.className = 'associates-grid';
+                container.innerHTML = '';
+
+                countBadge.textContent = `${associates.length} Associate${associates.length !== 1 ? 's' : ''}`;
+
+                associates.forEach((associate, index) => {
+                    const card = createAssociateCard(associate, index);
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                container.className = 'error';
+                container.innerHTML = `
+                    <h2>Oops! Something went wrong</h2>
+                    <p>${error.message}</p>
+                `;
+                countBadge.style.display = 'none';
+            }
+        }
+
+        // Initialize particles, leaderboard, and load associates
+        createParticles();
+        createLeaderboard();
+        loadAssociates();
+    </script>
+</body>
+</html>
