@@ -7,7 +7,7 @@ const associates =  [
     {
       name: "Merlin",
       academy: "November 2025",
-      tip: ""
+      tip: "Always try to see the positive side of things"
     },
     {
       name: "Your name here...",
