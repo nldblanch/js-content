@@ -8,7 +8,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "play": "node 5.\\ Rock\\ Paper\\ Scissors/rockPaperScissors.js",
-    "secretMessage": "node 7.\\ Coded\\ Message/codedMessage.js"
+    "secretMessage": "node 7.\\ Coded\\ Message/codedMessage.js",
+    "predeploy": "cd webpage && npm i && npm run build",
+    "deploy": "gh-pages -d webpage/dist"
   },
   "keywords": [
     "javascript",
@@ -20,6 +22,7 @@
   "author": "JavaScript Learning",
   "license": "MIT",
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "jest": "^29.7.0"
   },
   "jest": {
