@@ -15,7 +15,11 @@ const router = createBrowserRouter([
   {
     path: "/instructions",
     element: <Instructions />,
-  }
+  },
+  {
+    path: "/instructions/:slug",
+    element: <Instructions />,
+  },
 ], { basename });
 
 const rootEl = document.getElementById("root");

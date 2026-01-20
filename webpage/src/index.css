@@ -40,3 +40,7 @@
 		transform: translateY(-100px) translateX(-50px);
 	}
 }
+
+#main {
+    padding: 40px;
+}
