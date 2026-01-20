@@ -1,7 +1,8 @@
 import "./index.css";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from 'react-router';
-import Root from './Root.tsx';
+import Root from './Root';
+import Instructions from "./Instructions";
 
 const baseUrl = import.meta.env.BASE_URL;
 const basename = baseUrl === "/" ? undefined : baseUrl.replace(/\/$/, "");
@@ -10,14 +11,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    children: [
-      // {
-      //   path: "team",
-      //   element: <Team />,
-      //   loader: teamLoader,
-      // },
-    ],
   },
+  {
+    path: "/instructions",
+    element: <Instructions />,
+  }
 ], { basename });
 
 const rootEl = document.getElementById("root");
