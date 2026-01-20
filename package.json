@@ -2,13 +2,13 @@
   "name": "javascript-learning-challenges",
   "version": "1.0.0",
   "description": "A collection of JavaScript coding challenges for learning and practice",
-  "main": "index.js",
+  "main": "webpage/dist/index.html",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "play": "node 5.\\ Rock\\ Paper\\ Scissors/rockPaperScissors.js",
-    "secretMessage": "node 7.\\ Coded\\ Message/codedMessage.js",
+    "play": "node challenges/5.\\ Rock\\ Paper\\ Scissors/rockPaperScissors.js",
+    "secretMessage": "node challenges/7.\\ Coded\\ Message/codedMessage.js",
     "predeploy": "cd webpage && npm i && npm run build",
     "deploy": "gh-pages -d webpage/dist"
   },
@@ -19,7 +19,7 @@
     "coding",
     "practice"
   ],
-  "author": "JavaScript Learning",
+  "author": "Nathan Blanch and Chester Gardner",
   "license": "MIT",
   "devDependencies": {
     "gh-pages": "^6.3.0",
