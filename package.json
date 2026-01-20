@@ -30,7 +30,13 @@
     "collectCoverageFrom": [
       "**/*.js",
       "!**/node_modules/**",
-      "!**/test/**"
+      "!**/test/**",
+      "!**/challenges/formatNumber/**"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/webpage/",
+      "/challenges/formatNumber/"
     ]
   }
 }

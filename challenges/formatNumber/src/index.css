@@ -1,0 +1,199 @@
+:root {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
+  font-weight: 400;
+
+  color-scheme: light;
+
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --border: rgba(20, 20, 35, 0.12);
+  --text: #121224;
+  --muted: rgba(18, 18, 36, 0.65);
+  --input: rgba(255, 255, 255, 0.9);
+  --chip: rgba(18, 18, 36, 0.04);
+  --code: rgba(18, 18, 36, 0.03);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-size: 1rem;
+  color: var(--text);
+  background:
+    radial-gradient(900px 350px at 20% 0%, rgba(110, 168, 255, 0.25), transparent 60%),
+    radial-gradient(900px 350px at 80% 0%, rgba(180, 120, 255, 0.20), transparent 60%),
+    var(--bg);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* App styles (kept in one file for simplicity) */
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 44px 18px 64px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+}
+
+.subhead {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field > span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--input);
+  color: var(--text);
+  outline: none;
+}
+
+input[aria-invalid='true'] {
+  border-color: rgba(255, 84, 112, 0.7);
+}
+
+input:focus,
+select:focus {
+  border-color: rgba(110, 168, 255, 0.9);
+  box-shadow: 0 0 0 3px rgba(110, 168, 255, 0.2);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.note {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.menu {
+  display: grid;
+  gap: 12px;
+}
+
+.menuItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.menuLeft {
+  min-width: 0;
+}
+
+.menuName {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.menuDesc {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.menuPrice {
+  font-weight: 800;
+  white-space: nowrap;
+  font-size: 1.05rem;
+}
+
+.outputCard {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(110, 168, 255, 0.12), transparent);
+  margin-top: 12px;
+}
+
+.outputLabel {
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.outputValue {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 8px;
+  word-break: break-word;
+}
