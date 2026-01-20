@@ -8,7 +8,7 @@ import { ParticlesOverlay } from "./components/ParticlesOverlay";
 import { useParticles } from "./hooks/useParticles";
 import { usePreloadClass } from "./hooks/usePreloadClass";
 import { useTopContributors } from "./hooks/useTopContributors";
-
+import { NavBar } from "./components/NavBar";
 const Root = () => {
     const baseUrl = import.meta.env.BASE_URL;
 
@@ -21,6 +21,7 @@ const Root = () => {
             <ParticlesOverlay particles={particles} />
 
             <div id="wrapper">
+                <NavBar />
                 <AppHeader baseUrl={baseUrl} />
 
                 <div id="main">

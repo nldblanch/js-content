@@ -38,6 +38,17 @@ export default function InstructionsPage() {
                         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                             <li style={{ marginBottom: 8 }}>
                                 <NavLink
+                                    to={`/`}
+                                    style={({ isActive }) => ({
+                                        fontWeight: isActive ? 700 : 400,
+                                        textDecoration: "none",
+                                    })}
+                                >
+                                    Go Home
+                                </NavLink>
+                            </li>
+                            <li style={{ marginBottom: 8 }}>
+                                <NavLink
                                     to={`/instructions`}
                                     style={({ isActive }) => ({
                                         fontWeight: isActive ? 700 : 400,

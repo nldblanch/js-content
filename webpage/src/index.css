@@ -44,3 +44,22 @@
 #main {
     padding: 40px;
 }
+#nav {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#nav ul {
+	max-width: 1028px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: start;
+}
+
+#nav ul li {
+	list-style: none;
+	margin: 0 20px;
+	width: fit-content
+}
