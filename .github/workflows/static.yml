@@ -31,59 +31,74 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: webpage/package-lock.json
+
+      - name: Install dependencies
+        working-directory: webpage
+        run: npm ci
+
       - name: Fetch Repo Commit Data
         run: |
-          # Fetch commits and save to JSON
-          echo "Fetching commits..."
+          echo "Fetching commits for ${{ github.repository }}..."
           curl -L \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/nldblanch/js-content/commits?per_page=100 \
-          -o commits-data.json
-          
-          echo "Processing commit data..."
-          
-          # Process commits to count by GitHub username
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/commits?per_page=100" \
+            -o commits-data.json
+
+          echo "Generating webpage/src/data/commitStats.ts..."
           node -e '
-          const fs = require("fs");
-          
-          try {
-            const commits = JSON.parse(fs.readFileSync("commits-data.json", "utf8"));
-            const commitCounts = {};
-            
-            commits.forEach(commit => {
-              const username = commit.author?.login;
-              if (username) {
+            const fs = require("fs");
+
+            function writeCommitStats(stats) {
+              const header = "// Auto-generated during GitHub Pages deploy\n";
+              const body = "export const commitStats: Record<string, number> = " + JSON.stringify(stats, null, 2) + ";\n";
+              fs.writeFileSync("webpage/src/data/commitStats.ts", header + body);
+            }
+
+            try {
+              const commits = JSON.parse(fs.readFileSync("commits-data.json", "utf8"));
+              const commitCounts = {};
+
+              for (const commit of commits) {
+                const username = commit?.author?.login;
+                if (!username) continue;
                 commitCounts[username] = (commitCounts[username] || 0) + 1;
               }
-            });
-            
-            console.log("Commit counts by username:", commitCounts);
-            
-            const output = "const commitStats = " + JSON.stringify(commitCounts, null, 2) + ";\n";
-            fs.writeFileSync("docs/commits.js", output);
-            
-            console.log("Created docs/commits.js successfully");
-          } catch (error) {
-            console.error("Error processing commits:", error);
-            
-            // Create empty fallback file
-            fs.writeFileSync("docs/commits.js", "const commitStats = {};\n");
-            console.log("Created fallback commits.js");
-          }
+
+              console.log("Commit counts by username:", commitCounts);
+              writeCommitStats(commitCounts);
+            } catch (error) {
+              console.error("Error processing commits:", error);
+              writeCommitStats({});
+            }
           '
-          
-          echo "Verifying file creation..."
-          ls -la docs/commits.js
-          cat docs/commits.js
+
+      - name: Copy template assets
+        run: |
+          rm -rf webpage/public/assets webpage/public/images
+          mkdir -p webpage/public
+          cp -R docs/assets webpage/public/
+          cp -R docs/images webpage/public/
+
+      - name: Build
+        working-directory: webpage
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload docs folder
-          path: 'docs'
+          path: 'webpage/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
