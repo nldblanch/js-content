@@ -87,7 +87,14 @@ jobs:
           mkdir -p webpage/public
           cp -R docs/assets webpage/public/
           cp -R docs/images webpage/public/
-
+      - name: Test
+        working-directory: webpage
+        run: npm run coverage
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: webpage/coverage
       - name: Build
         working-directory: webpage
         env:

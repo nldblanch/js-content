@@ -1,6 +1,7 @@
 import { isValidElement, type ReactNode, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { slugify } from "../utils/slugify";
 
 type Props = {
     markdown: string;
@@ -20,19 +21,6 @@ function extractText(node: ReactNode): string {
     return "";
 }
 
-function slugifyGithubish(input: string): string {
-    // A lightweight GitHub-ish slugifier (enough for stable TOC anchors).
-    return input
-        .trim()
-        .toLowerCase()
-        .replace(/[\u200B-\u200D\uFEFF]/g, "")
-        .replace(/_/g, "")
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
-}
-
 function stripLeadingH1(markdown: string): string {
     const lines = markdown.split("\n");
 
@@ -48,6 +36,12 @@ function stripLeadingH1(markdown: string): string {
     return markdown;
 }
 
+const getIdForHeading = (children: ReactNode, headingIdPrefix?: string) => {
+    const text = extractText(children);
+    const slug = slugify(text);
+    return slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+};
+
 export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Props) {
     const normalized = useMemo(
         () => (stripFirstH1 ? stripLeadingH1(markdown) : markdown),
@@ -60,9 +54,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                 remarkPlugins={[remarkGfm]}
                 components={{
                     h1: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugifyGithubish(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h1 id={id} {...props}>
                                 {children}
@@ -70,9 +62,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h2: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugifyGithubish(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h2 id={id} {...props}>
                                 {children}
@@ -80,9 +70,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h3: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugifyGithubish(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h3 id={id} {...props}>
                                 {children}
@@ -90,9 +78,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h4: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugifyGithubish(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h4 id={id} {...props}>
                                 {children}
@@ -100,9 +86,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h5: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugifyGithubish(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h5 id={id} {...props}>
                                 {children}
@@ -110,9 +94,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h6: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugifyGithubish(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h6 id={id} {...props}>
                                 {children}

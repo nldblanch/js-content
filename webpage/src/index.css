@@ -7,6 +7,11 @@
 	--error-color: #e74c3c;
 }
 
+* {
+	margin: 0;
+	padding: 0;
+}
+
 .particles {
 	position: fixed;
 	top: 0;
@@ -61,5 +66,14 @@
 #nav ul li {
 	list-style: none;
 	margin: 0 20px;
-	width: fit-content
+	width: fit-content;
+	
+}
+
+.navlink:hover {
+	background-color: #00000011;
+}
+
+.accordion-link:nth-of-type(1) {
+	margin-top: 12px;
 }

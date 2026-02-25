@@ -4,52 +4,107 @@ export type ChallengeInstruction = {
     slug: string;
     title: string;
     order: number;
-    markdown: string;
-    sourcePath: string;
+    files: Array<{ title: string; markdown: string }>;
 };
 
-function getOrderFromPath(path: string): number {
-    const folder = path.split("/").slice(-2, -1)[0] ?? "";
+export function getChallengeDirFromPath(path: string): string {
+    const normalized = path.replace(/\\/g, "/");
+    const match = normalized.match(/(?:^|\/)(?:docs)(?:\/)([^/]+)(?:\/)/);
+    return match?.[1] ?? normalized.split("/").slice(-2, -1)[0] ?? "unknown";
+}
+
+export function getOrderFromFolder(folder: string): number {
     const match = folder.match(/^(\d+)\b/);
     return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
 }
 
-function getSlugFromPath(path: string): string {
-    const folder = path.split("/").slice(-2, -1)[0] ?? "unknown";
-    return folder
-        .toLowerCase()
-        .replace(/&/g, "and")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
+export function getOrderFromPath(path: string): number {
+    const folder = getChallengeDirFromPath(path);
+    return getOrderFromFolder(folder);
 }
 
-function getTitleFromMarkdown(md: string, fallback: string): string {
-    const firstHeading =
-        md
-            .split("\n")
-            .map((l) => l.trim())
-            .find((l) => l.startsWith("# ")) ?? "";
-    return firstHeading ? firstHeading.replace(/^#\s+/, "").trim() : fallback;
+export function getFileNameFromPath(path: string): string {
+    const normalized = path.replace(/\\/g, "/");
+    return normalized.split("/").slice(-1)[0] ?? "unknown.md";
 }
 
-export function useChallengeInstructions(): ChallengeInstruction[] {
-    return useMemo(() => {
-        const modules = import.meta.glob<string>("@repo/challenges/**/README.md", {
+export const formatFileName = (fileName: string): string => {
+    const base = fileName.replace(/\.md$/i, "");
+    const noNumbers = base.replace(/\d+/g, "");
+    return noNumbers.replace(/[-_]+/g, " ").trim();
+}
+
+const FILE_PRIORITY: Record<string, number> = {
+    "instructions.md": 0,
+    "readme.md": 1,
+    "function_documentation.md": 2,
+    "function-documentation.md": 2,
+    "extra_guide.md": 3,
+    "extra-guide.md": 3,
+    "solution.md": 4,
+};
+
+export function sortFiles(aName: string, bName: string): number {
+    const aKey = aName.toLowerCase();
+    const bKey = bName.toLowerCase();
+    const aPri = FILE_PRIORITY[aKey] ?? 100;
+    const bPri = FILE_PRIORITY[bKey] ?? 100;
+    return aPri - bPri || aKey.localeCompare(bKey);
+}
+type GlobModules = Record<string, string>;
+
+export const challengeDocsGlobber = {
+    glob(): GlobModules {
+        return import.meta.glob<string>("../../../../docs/*/**/*.md", {
             query: "?raw",
             import: "default",
             eager: true,
-        });
+        }) as unknown as GlobModules;
+    },
+};
 
-        const items = Object.entries(modules).map(([sourcePath, markdown]) => {
-            const order = getOrderFromPath(sourcePath);
-            const slug = getSlugFromPath(sourcePath);
-            const fallbackTitle = sourcePath.split("/").slice(-2, -1)[0] ?? slug;
-            const title = getTitleFromMarkdown(markdown, fallbackTitle);
+export function globChallengeDocs(): GlobModules {
+    return challengeDocsGlobber.glob();
+}
 
-            return { slug, title, order, markdown, sourcePath };
-        });
+export function buildChallengeInstructions(modules: GlobModules): ChallengeInstruction[] {
+    const docsByDir = new Map<
+        string,
+        Array<{ fileName: string; title: string; markdown: string }>
+    >();
 
-        items.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
-        return items;
+    for (const [sourcePath, markdown] of Object.entries(modules)) {
+        const slug = getChallengeDirFromPath(sourcePath);
+        const fileName = getFileNameFromPath(sourcePath);
+
+        const entry = { fileName, title: formatFileName(fileName), markdown };
+        const list = docsByDir.get(slug);
+        if (list) list.push(entry);
+        else docsByDir.set(slug, [entry]);
+    }
+
+    const items: ChallengeInstruction[] = Array.from(docsByDir.entries()).map(
+        ([slug, files]) => {
+            const sortedFiles = [...files].sort((a, b) => sortFiles(a.fileName, b.fileName));
+
+            return {
+                slug,
+                title: formatFileName(slug),
+                order: getOrderFromFolder(slug),
+                files: sortedFiles.map((f) => ({ title: f.title, markdown: f.markdown })),
+            };
+        }
+    );
+
+    items.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+    return items;
+}
+export function useChallengeInstructions(): ChallengeInstruction[] {
+    return useMemo(() => {
+        const modules = challengeDocsGlobber.glob();
+
+        return buildChallengeInstructions(modules);
     }, []);
 }
+
+export default useChallengeInstructions;
