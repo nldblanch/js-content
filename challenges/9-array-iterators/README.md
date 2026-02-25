@@ -1,46 +1,28 @@
-# Task Manager - Array Iterator Practice
+# Task Manager (Core Array Methods)
 
-A hands-on React application for learning JavaScript array iterator methods by implementing utility functions for a task management system.
+Implement a small set of utilities in [src/utils.js](src/utils.js) using the core array methods, then see them working in the UI.
 
-_Note: This section, including this README, is 80% AI generated. Challenge 9 is still in the PoC stage and hasn't been finalised yet. Please raise an issue if you notice something that could be improved!_
+## Run it
 
-## Table of Contents
+```bash
+cd challenges/9-array-iterators
+npm install
+npm run dev
+```
 
-- [Learning Objectives](#learning-objectives)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [How It Works](#how-it-works)
-  - [Your Workflow](#your-workflow)
-  - [Test-Driven Development](#test-driven-development)
-- [Data Structure](#data-structure)
-  - [Task Object](#task-object)
-  - [Priority Levels](#priority-levels)
-  - [Date Format](#date-format)
-- [Utility Functions Reference](#utility-functions-reference)
-  - [filterTasksByStatus](#filtertasksbystatustasks-completed)
-  - [getHighPriorityTasks](#gethighprioritytaskstasks)
-  - [filterTasksByPriority](#filtertasksbyprioritytasks-priority)
-  - [formatTasksForDisplay](#formattasksfordisplaytasks)
-  - [addUniqueTags](#adduniquetagsarray-tags)
-  - [getAllUniqueTags](#getalluniquetagstasks)
-  - [countCompletedTasks](#countcompletedtaskstasks)
-  - [areAllTasksComplete](#arealltaskscompletetasks)
-  - [hasHighPriorityTasks](#hashighprioritytaskstasks)
-  - [findTaskById](#findtaskbyidtasks-id)
-  - [notifyIncompleteTasks](#notifyincompletetaskstasks)
-  - [calculateProductivityStats](#calculateproductivitystatstasks)
-  - [groupTasksByPriority](#grouptasksbyprioritytasks)
-  - [sortTasksByPriorityAndStatus](#sorttasksbypriorityandsatustasks)
-  - [formatDate](#formatdatedatestring)
-  - [isRouteActive](#isrouteactiveroutepath-currentpath)
-- [Application Features](#application-features)
-- [Testing Your Code](#testing-your-code)
-- [Tips](#tips)
-- [Challenge Completion](#challenge-completion)
-- [Additional Resources](#additional-resources)
-- [Build Commands](#build-commands)
+## What you implement (7 functions)
 
+- `filterTasksByStatus` (`.filter()`)
+- `getHighPriorityTasks` (`.filter()`)
+- `formatTasksForDisplay` (`.map()`)
+- `findTaskById` (`.find()`)
+- `areAllTasksComplete` (`.every()`)
+- `hasHighPriorityTasks` (`.some()`)
+- `notifyIncompleteTasks` (`.forEach()`)
+
+Open the app and watch the Introduction page tests turn green as you implement each TODO.
+
+<!-- Legacy README (kept for reference)
 ## Learning Objectives
 
 This project teaches you to:
@@ -694,3 +676,5 @@ npm run preview
 **Happy Coding!**
 
 Master array iterators by building something real. Watch your code come to life!
+
+-->

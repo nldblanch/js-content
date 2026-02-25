@@ -3,7 +3,7 @@
  * These are separate from the student challenge functions
  */
 
-import { UI_COLORS } from '../constants/colors';
+import { DIFFICULTY_COLORS, UI_COLORS } from '../constants/colors';
 
 /**
  * Parse text with [code] syntax and return JSX with styled inline code
@@ -52,7 +52,6 @@ export const runAllTests = (util) => {
  * @returns {string} Hex color code
  */
 export const getDifficultyColor = (difficulty) => {
-  const { DIFFICULTY_COLORS } = require('../constants/colors');
   return DIFFICULTY_COLORS[difficulty] || UI_COLORS.neutral.accent;
 };
 

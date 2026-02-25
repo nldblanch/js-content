@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Modal from '../components/Modal';
 import { utilityTests } from '../constants/utilityTests';
 import {
@@ -10,32 +9,20 @@ import {
 import '../IntroPage.css';
 
 const IntroductionPage = () => {
-    const [difficultyFilter, setDifficultyFilter] = useState('all');
-    const [categoryFilter, setCategoryFilter] = useState('all');
-
     const results = utilityTests.map(util => ({
         ...util,
         testResults: runAllTests(util)
     }));
 
-    // Apply filters
-    const filteredResults = results.filter(util => {
-        const matchesDifficulty = difficultyFilter === 'all' || util.difficulty === difficultyFilter;
-        const matchesCategory = categoryFilter === 'all' ||
-            (categoryFilter === 'array' && util.method.includes('.')) ||
-            (categoryFilter === 'utility' && !util.method.includes('.'));
-        return matchesDifficulty && matchesCategory;
-    });
-
-    const { totalTests, passedTests } = calculateProgress(filteredResults);
+    const { totalTests, passedTests } = calculateProgress(results);
     const overallProgress = calculateProgress(results);
 
     return (
         <div className="introduction-page">
             <div className="intro-header">
-                <h1>🎯 Array Iterator Challenge</h1>
+                <h1>📋 Task Manager: Core Array Methods</h1>
                 <p className="intro-subtitle">
-                    Master JavaScript array methods by implementing utility functions used throughout this Task Manager app
+                    Implement 7 small utilities using the core array methods, then see them working in the Task Manager page.
                 </p>
                 <div className="progress-summary">
                     <div className="progress-bar-container">
@@ -57,68 +44,19 @@ const IntroductionPage = () => {
                     <li>Implement each function following the TODO comments</li>
                     <li>Watch the tests below turn green ✅ as you complete each one</li>
                     <li>Click on any function to see detailed instructions and tips</li>
-                    <li>Navigate to other pages to see your functions in action!</li>
+                    <li>Open <strong>Task Manager</strong> in the nav to see them in action</li>
                 </ol>
             </div>
+
             <div className="filters-section">
-                <div className="filter-group">
-                    <label>Difficulty:</label>
-                    <button
-                        className={difficultyFilter === 'all' ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => setDifficultyFilter('all')}
-                    >
-                        All
-                    </button>
-                    <button
-                        className={difficultyFilter === 'Easy' ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => setDifficultyFilter('Easy')}
-                    >
-                        Easy
-                    </button>
-                    <button
-                        className={difficultyFilter === 'Medium' ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => setDifficultyFilter('Medium')}
-                    >
-                        Medium
-                    </button>
-                    <button
-                        className={difficultyFilter === 'Hard' ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => setDifficultyFilter('Hard')}
-                    >
-                        Hard
-                    </button>
-                </div>
-
-                <div className="filter-group">
-                    <label>Category:</label>
-                    <button
-                        className={categoryFilter === 'all' ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => setCategoryFilter('all')}
-                    >
-                        All
-                    </button>
-                    <button
-                        className={categoryFilter === 'array' ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => setCategoryFilter('array')}
-                    >
-                        Array Methods
-                    </button>
-                    <button
-                        className={categoryFilter === 'utility' ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => setCategoryFilter('utility')}
-                    >
-                        Utilities
-                    </button>
-                </div>
-
                 <div className="filter-results-info">
-                    Showing {filteredResults.length} of {results.length} challenges • {passedTests} / {totalTests} tests passing
+                    {passedTests} / {totalTests} tests passing
                 </div>
             </div>
 
             <Modal>
                 <div className="utilities-grid">
-                    {filteredResults.map((util, index) => {
+                    {results.map((util, index) => {
                         const passedCount = util.testResults.filter(t => t.passed).length;
                         const totalCount = util.testResults.length;
                         const allPassed = passedCount === totalCount;
