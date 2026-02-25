@@ -87,8 +87,11 @@ jobs:
           mkdir -p webpage/public
           cp -R docs/assets webpage/public/
           cp -R docs/images webpage/public/
-
+      - name: Test
+        working-directory: webpage
+        run: npm test
       - name: Build
+        depends-on: Test
         working-directory: webpage
         env:
           BASE_PATH: /${{ github.event.repository.name }}/

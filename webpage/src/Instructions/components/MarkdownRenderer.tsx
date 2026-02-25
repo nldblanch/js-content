@@ -36,6 +36,12 @@ function stripLeadingH1(markdown: string): string {
     return markdown;
 }
 
+const getIdForHeading = (children: ReactNode, headingIdPrefix?: string) => {
+    const text = extractText(children);
+    const slug = slugify(text);
+    return slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+};
+
 export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Props) {
     const normalized = useMemo(
         () => (stripFirstH1 ? stripLeadingH1(markdown) : markdown),
@@ -48,9 +54,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                 remarkPlugins={[remarkGfm]}
                 components={{
                     h1: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugify(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h1 id={id} {...props}>
                                 {children}
@@ -58,9 +62,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h2: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugify(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h2 id={id} {...props}>
                                 {children}
@@ -68,9 +70,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h3: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugify(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h3 id={id} {...props}>
                                 {children}
@@ -78,9 +78,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h4: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugify(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h4 id={id} {...props}>
                                 {children}
@@ -88,9 +86,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h5: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugify(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h5 id={id} {...props}>
                                 {children}
@@ -98,9 +94,7 @@ export function MarkdownRenderer({ markdown, stripFirstH1, headingIdPrefix }: Pr
                         );
                     },
                     h6: ({ children, ...props }) => {
-                        const text = extractText(children);
-                        const slug = slugify(text);
-                        const id = slug ? `${headingIdPrefix ?? ""}${slug}` : undefined;
+                        const id = getIdForHeading(children, headingIdPrefix);
                         return (
                             <h6 id={id} {...props}>
                                 {children}
