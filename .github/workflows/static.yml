@@ -80,13 +80,6 @@ jobs:
               writeCommitStats({});
             }
           '
-
-      - name: Copy template assets
-        run: |
-          rm -rf webpage/public/assets webpage/public/images
-          mkdir -p webpage/public
-          cp -R docs/assets webpage/public/
-          cp -R docs/images webpage/public/
       - name: Test
         working-directory: webpage
         run: npm run coverage
