@@ -89,7 +89,12 @@ jobs:
           cp -R docs/images webpage/public/
       - name: Test
         working-directory: webpage
-        run: npm test
+        run: npm run coverage
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: webpage/coverage
       - name: Build
         depends-on: Test
         working-directory: webpage

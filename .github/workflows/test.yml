@@ -24,3 +24,14 @@ jobs:
     
     - name: Generate coverage report
       run: npm run test:coverage
+
+    - name: Webpage tests
+      run: |
+        cd webpage
+        npm ci
+        npm run coverage
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: webpage/coverage
