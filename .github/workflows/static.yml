@@ -96,7 +96,6 @@ jobs:
           name: coverage-report
           path: webpage/coverage
       - name: Build
-        needs: Test
         working-directory: webpage
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
