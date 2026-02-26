@@ -40,7 +40,7 @@ const IntroductionPage = () => {
             <div className="intro-instructions">
                 <h2>📚 Getting Started</h2>
                 <ol>
-                    <li>Open <code>src/utils.js</code> in your editor</li>
+                    <li>Open <code>src/challenges</code> in your editor</li>
                     <li>Implement each function following the TODO comments</li>
                     <li>Watch the tests below turn green ✅ as you complete each one</li>
                     <li>Click on any function to see detailed instructions and tips</li>
