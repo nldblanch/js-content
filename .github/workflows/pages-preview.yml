@@ -23,7 +23,7 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
+      name: testing
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
