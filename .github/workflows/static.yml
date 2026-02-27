@@ -13,7 +13,7 @@ jobs:
               with:
                 node-version: 20
                 cache: npm
-                cache-dependency-path: package-lock.json
+                cache-dependency-path: webpage/package-lock.json
             - name: Install
               working-directory: webpage
               run: npm ci
@@ -27,6 +27,8 @@ jobs:
                 path: webpage/coverage
             - name: Build
               working-directory: webpage
+              env:
+                BASE_PATH: /${{ github.event.repository.name }}/
               run: npm run build
             - uses: JamesIves/github-pages-deploy-action@v4
               with:
