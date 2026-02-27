@@ -1,3 +1,4 @@
+ @import "tailwindcss";
  :root {
 	--primary-color: #00c7c3;
 	--primary-dark: #062832;
@@ -5,11 +6,7 @@
 	--white: #ffffff;
 	--background: #ffffff;
 	--error-color: #e74c3c;
-}
-
-* {
-	margin: 0;
-	padding: 0;
+	font-family: 'M PLUS 1 Code', monospace;
 }
 
 .particles {

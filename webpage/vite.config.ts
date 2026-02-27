@@ -2,11 +2,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/',
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   test:{
     globals: true,
     environment: "happy-dom",
