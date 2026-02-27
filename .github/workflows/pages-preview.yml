@@ -24,6 +24,7 @@ jobs:
                 cache-dependency-path: webpage/package-lock.json
             - name: Install
               if: github.event.action != 'closed'
+              working-directory: webpage
               run: |
                   npm ci
             - name: Test
@@ -36,6 +37,7 @@ jobs:
                 path: webpage/coverage
             - name: Build
               if: github.event.action != 'closed'
+              working-directory: webpage
               run: | 
                   npm run build
 
