@@ -38,6 +38,8 @@ jobs:
             - name: Build
               if: github.event.action != 'closed'
               working-directory: webpage
+              env:
+                BASE_PATH: /${{ github.event.repository.name }}/pr-preview/pr-${{ github.event.pull_request.number }}/
               run: | 
                   npm run build
 
