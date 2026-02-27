@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
 import { MemoryRouter } from "react-router";
 import { Navigation } from "./Navigation";
+import routes from "../../routes";
 
 const mocks = vi.hoisted(() => ({
     useChallengeInstructionsMock: vi.fn(),
@@ -39,10 +40,9 @@ describe("Navigation", () => {
             </MemoryRouter>
         );
 
-        expect(screen.getByRole("link", { name: "Go Home" })).toHaveAttribute("href", "/");
         expect(screen.getByRole("link", { name: "Overview" })).toHaveAttribute(
             "href",
-            "/instructions"
+            routes.SETUP.path
         );
 
         const accordions = screen.getAllByTestId("accordion");

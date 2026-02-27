@@ -1,104 +1,36 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy Pages (Production)
-
+name: Deploy
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
+    push:
+        branches:
+            - main
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: webpage/package-lock.json
-
-      - name: Install dependencies
-        working-directory: webpage
-        run: npm ci
-
-      - name: Fetch Repo Commit Data
-        run: |
-          echo "Fetching commits for ${{ github.repository }}..."
-          curl -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${{ github.repository }}/commits?per_page=100" \
-            -o commits-data.json
-
-          echo "Generating webpage/src/data/commitStats.ts..."
-          node -e '
-            const fs = require("fs");
-
-            function writeCommitStats(stats) {
-              const header = "// Auto-generated during GitHub Pages deploy\n";
-              const body = "export const commitStats: Record<string, number> = " + JSON.stringify(stats, null, 2) + ";\n";
-              fs.writeFileSync("webpage/src/data/commitStats.ts", header + body);
-            }
-
-            try {
-              const commits = JSON.parse(fs.readFileSync("commits-data.json", "utf8"));
-              const commitCounts = {};
-
-              for (const commit of commits) {
-                const username = commit?.author?.login;
-                if (!username) continue;
-                commitCounts[username] = (commitCounts[username] || 0) + 1;
-              }
-
-              console.log("Commit counts by username:", commitCounts);
-              writeCommitStats(commitCounts);
-            } catch (error) {
-              console.error("Error processing commits:", error);
-              writeCommitStats({});
-            }
-          '
-      - name: Test
-        working-directory: webpage
-        run: npm run coverage
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: webpage/coverage
-      - name: Build
-        working-directory: webpage
-        env:
-          BASE_PATH: /${{ github.event.repository.name }}/
-        run: npm run build
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'webpage/dist'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+                cache: npm
+                cache-dependency-path: package-lock.json
+            - name: Install
+              working-directory: webpage
+              run: npm ci
+            - name: Test
+              working-directory: webpage
+              run: npm run coverage
+            - name: Upload coverage report
+              uses: actions/upload-artifact@v4
+              with:
+                name: coverage-report
+                path: webpage/coverage
+            - name: Build
+              working-directory: webpage
+              run: npm run build
+            - uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  folder: ./webpage/dist
+                  branch: gh-pages
+                  clean-exclude: pr-preview
+                  force: false
