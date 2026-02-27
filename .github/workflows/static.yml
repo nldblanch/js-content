@@ -28,7 +28,7 @@ jobs:
             - name: Build
               working-directory: webpage
               env:
-                BASE_PATH: /${{ github.event.repository.name }}
+                BASE_PATH: /${{ github.event.repository.name }}/
               run: npm run build
             - uses: JamesIves/github-pages-deploy-action@v4
               with:
