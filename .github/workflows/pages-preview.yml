@@ -9,6 +9,11 @@ on:
       - ".github/workflows/static.yml"
       - ".github/workflows/pages-preview.yml"
   workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to publish under /pr/<number>/ (manual runs only)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -21,14 +26,18 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     # Fork PRs don't have permission to push to gh-pages
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
     environment:
       name: testing
-      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ github.event.pull_request.number }}/
+      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ env.PR_NUMBER }}/
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -86,16 +95,14 @@ jobs:
       - name: Build
         working-directory: webpage
         env:
-          BASE_PATH: /${{ github.event.repository.name }}/pr/${{ github.event.pull_request.number }}/
+          BASE_PATH: /${{ github.event.repository.name }}/pr/${{ env.PR_NUMBER }}/
         run: npm run build
 
       - name: Deploy PR preview (gh-pages)
-        env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
 
-          PREVIEW_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ github.event.pull_request.number }}/"
+          PREVIEW_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${PR_NUMBER}/"
           echo "Preview URL: ${PREVIEW_URL}" >> "$GITHUB_STEP_SUMMARY"
 
           git config user.name "github-actions[bot]"
@@ -106,13 +113,10 @@ jobs:
 
           # Safety: don't allow PR previews to be the first thing that creates gh-pages,
           # because that would effectively wipe the production site.
-          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            echo "gh-pages branch does not exist yet. Run the production Pages workflow once to bootstrap it." >> "$GITHUB_STEP_SUMMARY"
-            echo "Then re-run this workflow to publish previews under /pr/<number>/." >> "$GITHUB_STEP_SUMMARY"
+          if ! git fetch origin gh-pages:gh-pages; then
+            echo "Unable to fetch gh-pages. Ensure the production workflow has created it, and that GITHUB_TOKEN has write access." >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
-
-          git fetch origin gh-pages:gh-pages
           git worktree add -B gh-pages "${WORKTREE_DIR}" gh-pages
 
           mkdir -p "${WORKTREE_DIR}/pr/${PR_NUMBER}"
