@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router"
 import routes from "../../routes"
+import { getAsset } from "../../utils/getAsset"
 
 const Banner = () => {
+
     return (
         <div className="w-full bg-[#3C3C3C] flex justify-between items-center px-4 py-2">
             <div className="flex justify-evenly gap-2">
@@ -11,8 +13,8 @@ const Banner = () => {
             </div>
             <h1 className="text-4xl font-semibold text-[#A9A9A9]">JavaScript Content</h1>
             <div className="flex gap-4 justify-between">
-                <img src="/sunshine.svg" className="h-8 aspect-square" />
-                <img src="/help.svg" className="h-8 aspect-square" />
+                <img src={getAsset("sunshine.svg")} className="h-8 aspect-square" alt="Theme" />
+                <img src={getAsset("help.svg")} className="h-8 aspect-square" alt="Help" />
             </div>
         </div>
     )
