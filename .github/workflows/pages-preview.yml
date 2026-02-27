@@ -104,17 +104,16 @@ jobs:
           WORKTREE_DIR=".gh-pages-worktree"
           rm -rf "${WORKTREE_DIR}"
 
-          # If gh-pages exists, fetch it into a local branch; otherwise create it.
-          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            git fetch origin gh-pages:gh-pages
-            git worktree add -B gh-pages "${WORKTREE_DIR}" gh-pages
-          else
-            git worktree add "${WORKTREE_DIR}" --detach
-            cd "${WORKTREE_DIR}"
-            git switch --orphan gh-pages
-            git rm -rf . || true
-            cd - >/dev/null
+          # Safety: don't allow PR previews to be the first thing that creates gh-pages,
+          # because that would effectively wipe the production site.
+          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            echo "gh-pages branch does not exist yet. Run the production Pages workflow once to bootstrap it." >> "$GITHUB_STEP_SUMMARY"
+            echo "Then re-run this workflow to publish previews under /pr/<number>/." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
           fi
+
+          git fetch origin gh-pages:gh-pages
+          git worktree add -B gh-pages "${WORKTREE_DIR}" gh-pages
 
           mkdir -p "${WORKTREE_DIR}/pr/${PR_NUMBER}"
           rsync -a --delete "webpage/dist/" "${WORKTREE_DIR}/pr/${PR_NUMBER}/"
