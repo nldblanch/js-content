@@ -102,18 +102,26 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git fetch origin gh-pages:gh-pages || true
-          if git show-ref --verify --quiet refs/heads/gh-pages; then
-            git switch gh-pages
+          WORKTREE_DIR=".gh-pages-worktree"
+          rm -rf "${WORKTREE_DIR}"
+
+          # If gh-pages exists, fetch it into a local branch; otherwise create it.
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch origin gh-pages:gh-pages
+            git worktree add -B gh-pages "${WORKTREE_DIR}" gh-pages
           else
+            git worktree add "${WORKTREE_DIR}" --detach
+            cd "${WORKTREE_DIR}"
             git switch --orphan gh-pages
             git rm -rf . || true
+            cd - >/dev/null
           fi
 
           # Sync dist/ into the branch root, but preserve all PR previews under pr/
-          rsync -a --delete --exclude 'pr/' "webpage/dist/" ./
-          touch .nojekyll
+          rsync -a --delete --exclude 'pr/' "webpage/dist/" "${WORKTREE_DIR}/"
+          touch "${WORKTREE_DIR}/.nojekyll"
 
+          cd "${WORKTREE_DIR}"
           git add -A
           if git diff --cached --quiet; then
             echo "No changes to deploy."
@@ -122,3 +130,6 @@ jobs:
 
           git commit -m "Deploy production"
           git push origin gh-pages
+          cd - >/dev/null
+
+          git worktree remove "${WORKTREE_DIR}" --force
