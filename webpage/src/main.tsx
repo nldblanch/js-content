@@ -4,6 +4,7 @@ import { createBrowserRouter, Link, RouterProvider } from 'react-router';
 import RootLayout from './RootLayout';
 import Instructions from "./Instructions";
 import routes from "./routes";
+import Home from "./Home";
 
 const baseUrl = import.meta.env.BASE_URL;
 const basename = baseUrl === "/" ? undefined : baseUrl.replace(/\/$/, "");
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
       {
         path: "/instructions",
         element: <Instructions />,
