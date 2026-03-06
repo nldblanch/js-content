@@ -10,6 +10,10 @@ on:
 
 concurrency: preview-${{ github.ref }}
 
+# ENVIRONMENT VARIABLES
+env:
+  VITE_ENABLE_CLI: ${{ secrets.VITE_ENABLE_CLI }}
+
 jobs:
     deploy-preview:
         runs-on: ubuntu-latest
