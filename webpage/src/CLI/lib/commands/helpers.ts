@@ -1,6 +1,11 @@
 import type FS from "@isomorphic-git/lightning-fs";
 import { useTerminalStore } from "../../store/useTerminalStore.ts";
 
+/** Type guard for lightning-fs errors, which extend Error with a `code` property */
+export function isFsError(err: unknown): err is Error & { code: string } {
+  return err instanceof Error && 'code' in err && typeof err.code === 'string';
+}
+
 /**
  * Helper to resolve relative or absolute paths against the CWD
  */

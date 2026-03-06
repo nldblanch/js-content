@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getRepoDir } from '../../../store/useRepoStore';     // Access the current repo directory from the store
+import { useRepoStore } from '../../../store/useRepoStore';   // Subscribe to repo changes
+import { useAppStore } from '../../../store/useAppStore';     // Subscribe to gitRevision
 import { getFileTree } from '../../../lib/repo';              // Allows navigating the file tree of the repo
 
 import {                                                      // Lucide Icon Imports
@@ -28,10 +29,15 @@ interface RepoActionButtonProps {
   count: string | number;
 }
 
-const GithubRepo = () => {
+interface RepoViewProps {
+  onNavigateToIndex?: () => void;
+}
 
-  // Get the current repo from the Zustand store. This is set when a user enters a repo from index.
-  const repoDir = getRepoDir();
+const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
+
+  // Subscribe to Zustand stores — component re-renders when these change
+  const repoDir = useRepoStore(state => state.repoDir);
+  const gitRevision = useAppStore(state => state.gitRevision);
   const repoName = repoDir ? repoDir.split('/').pop()?.replace('.git', '') : 'my-cool-repo';
 
   const [currentPath, setCurrentPath] = useState<string>("");   // Current path within repo
@@ -50,7 +56,7 @@ const GithubRepo = () => {
     };
 
     loadFiles();
-  }, [repoDir, currentPath]);
+  }, [repoDir, currentPath, gitRevision]);
 
   const navigateTo = (path: string) => setCurrentPath(path);
 
@@ -60,7 +66,7 @@ const GithubRepo = () => {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div className="flex items-center gap-2 text-xl">
           <Book size={18} className="text-[#8b949e]" />
-          <span className="text-[#58a6ff] hover:underline cursor-pointer">username</span>
+          <span className="text-[#58a6ff] hover:underline cursor-pointer" onClick={onNavigateToIndex}>user</span>
           <span className="text-[#8b949e]">/</span>
           <span
             className="font-semibold text-[#58a6ff] hover:underline cursor-pointer"

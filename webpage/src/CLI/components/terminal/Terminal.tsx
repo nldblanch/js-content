@@ -1,4 +1,5 @@
 import { Terminal as XTerm } from '@xterm/xterm';
+import '@xterm/xterm/css/xterm.css';
 import { FitAddon } from '@xterm/addon-fit';
 import { useEffect, useRef } from 'react';
 import { dispatchCommand } from '../../lib/commands/index.ts';
@@ -20,9 +21,9 @@ function Terminal() {
     terminal.open(terminalRef.current);                           // Open terminal in container
 
     fitAddon.fit();                                               // Fit terminal to container size
-    terminal.write(`Welcome to GitSim!\r\n${primaryPrompt}'/home/user$ `);
+    terminal.write(`Welcome to GitSim!\r\n${primaryPrompt}/home/user$ `);
 
-    // xterm handles its own state, a persistant input buffer is fine
+    // xterm handles its own state, a persistent input buffer is fine
     let inputBuffer = "";
 
     // xterm has its own event system for handling user input
@@ -48,7 +49,9 @@ function Terminal() {
   }, []);
 
   return (
-    <div ref={terminalRef} className="w-full h-full" />
+    <div className="h-full bg-black text-white font-mono text-sm rounded-md overflow-hidden">
+      <div ref={terminalRef} className='h-full p-4' />
+    </div>
   );
 }
 

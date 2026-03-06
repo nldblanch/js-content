@@ -2,6 +2,7 @@
 import * as shell from "./shell";
 import * as git from "./git";
 import type { CommandContext, CommandFn } from "../../types.ts";
+import { useChallengeStore } from "../../store/useChallengeStore.ts";
 
 /**
  * Register command modules to be accessible within the environment.
@@ -41,7 +42,13 @@ const COMMANDS_WITH_SUBCOMMANDS = ["git", "npm", "node"]
 
    try {
      // If the command has a subcmd, pass it in the context. Otherwise, just pass the context
-     return subcmd ? await handler({ ...ctx, subcmd }) : await handler(ctx);
+     const result = subcmd ? await handler({ ...ctx, subcmd }) : await handler(ctx);
+
+     // Re-evaluate challenge completion after every command
+     useChallengeStore.getState().runChecks();
+
+     return result;
+
    } catch (err: unknown) {
      return `Error: ${(err as Error).message || "Failed to execute command"}`;
    }

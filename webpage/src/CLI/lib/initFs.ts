@@ -1,12 +1,13 @@
 import fs from './fileSystem.ts';
 import { useTerminalStore } from "../store/useTerminalStore.ts";
+import { isFsError } from './commands/helpers.ts';
 
 async function mkdirSafe(path: string) {
   try {
     await fs.promises.mkdir(path);
   } catch (err: unknown) {
-    // Silently fail if directory already exists, but log other errors
-    if (err instanceof Error && !err.message.includes('EEXIST')) {
+    // Silently fail if dir already exists
+    if (!isFsError(err) || err.code !== 'EEXIST') {
       console.error(`Error creating directory ${path}:`, err);
     }
   }

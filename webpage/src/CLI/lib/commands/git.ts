@@ -2,8 +2,10 @@ import git from 'isomorphic-git';
 import fs from '../fileSystem';
 import { getCwd } from "../../store/useTerminalStore.ts";
 import type { CommandContext } from "../../types.ts";
+import type { CommitObject, TreeEntry } from 'isomorphic-git';
 import { resolvePath, exists, urlToPath } from './helpers.ts';
 import { mkdir } from './shell.ts';
+import { useAppStore } from '../../store/useAppStore.ts';
 
 /**
  * Internal Git Router
@@ -13,11 +15,15 @@ export async function main(ctx: CommandContext): Promise<string> {
   const { subcmd } = ctx;
 
   const subcommands: Record<string, (ctx: CommandContext) => Promise<string>> = {
-    "init": init,
+    "init":   init,
     "remote": remote,
-    //"clone": clone,
-    "add": add,
-    "status": async () => "Status: Not yet implemented",
+    "clone":  clone,
+    "add":    add,
+    "commit": commit,
+    "push":   push,
+    "pull":   pull,
+    "status": status,
+    "log":    log,
   };
 
   const handler = subcommands[subcmd || ""];
@@ -30,40 +36,30 @@ export async function main(ctx: CommandContext): Promise<string> {
  * Initializes a new Git repository. If a directory is specified, it will initialize there.
  * If the directory doesn't exist, it will be created first.
  * If no directory is specified, it initializes in the current working directory.
- * @param ctx - A context object from the dispatcher containing any arguments and flags
- * @returns - An empty string on success, or an error message if the directory cannot be created or initialized.
+ *
+ * After init, we override HEAD to point at refs/heads/main instead of the
+ * isomorphic-git default (master). This matches modern git behaviour and
+ * ensures `git push origin main` works out of the box.
  */
 export async function init(ctx: CommandContext): Promise<string> {
   const { args } = ctx;
 
-  // No directory specified, initialize in current working directory
-  if (args.length === 0) {
-    await git.init({
-      fs,             // LightningFS instance
-      dir: getCwd()   // from Zustand store
-    });
-    return "Initialized empty Git repository in " + getCwd();
-  }
+  // Determine target directory
+  const dir = args.length === 0 ? getCwd() : resolvePath(args[0]);
 
-  // Directory specified, initialize there.
-  if (await exists(fs, args[0], "dir")) {
-    await git.init({
-      fs,
-      dir: resolvePath(args[0])
-    });
-    return "Initialized empty Git repository in " + resolvePath(args[0]);
-  }
-
-  // If it doesn't exist, create it first.
-  else {
+  // Create the directory if it doesn't exist
+  if (args.length > 0 && !(await exists(fs, dir, 'dir'))) {
     await mkdir({ args: [args[0]], flags: { p: true } });
-    await git.init({
-      fs,
-      dir: resolvePath(args[0])
-    });
-    return "Initialized empty Git repository in " + resolvePath(args[0]);
   }
-};
+
+  // Init the repo
+  await git.init({ fs, dir });
+
+  // Override HEAD to default to 'main' instead of 'master'
+  await fs.promises.writeFile(`${dir}/.git/HEAD`, 'ref: refs/heads/main\n');
+
+  return `Initialized empty Git repository in ${dir}/.git/`;
+}
 
 /**
  * Manage remote connections for the repository. This includes listing existing remotes, adding new ones, removing, and renaming them.
@@ -75,7 +71,7 @@ export async function init(ctx: CommandContext): Promise<string> {
  *  git remote remove <name>                remove a remote
  *  git remote rename <old> <new>           rename a remote
  *
- *  Remote add dpes NOT check if it is valid - neither does real git. Check happens on Push
+ *  Remote add does NOT check if it is valid - neither does real git. Check happens on Push
  */
 export async function remote(ctx: CommandContext): Promise<string> {
   const { args, flags } = ctx;
@@ -178,11 +174,98 @@ export async function remote(ctx: CommandContext): Promise<string> {
          `   or: git remote remove <name>`;
 }
 
-/*
-export async function clone(ctx: CommandContext): Promise<string> {
-  // git clone
+/**
+ * Copy all git objects reachable from a given SHA from one repo into another.
+ * Walks commit -> tree -> blob recursively.
+ *
+ * srcDir  = the .git folder (or bare repo folder) to read FROM
+ * destDir = the .git folder (or bare repo folder) to write INTO
+ */
+async function copyMissingObjects(srcDir: string, destDir: string, sha: string): Promise<void> {
+
+  const visited = new Set<string>();
+
+  async function copyObject(oid: string): Promise<void> {
+    if (visited.has(oid)) return;   // Exit condition for recursion
+    visited.add(oid);
+
+    // Already exists in destination? Skip.
+    try {
+      await git.readObject({ fs, gitdir: destDir, oid, format: 'deflated' });
+      return;
+    } catch { /* not there yet — continue */ }
+
+    // Read from source
+    const obj = await git.readObject({ fs, gitdir: srcDir, oid, format: 'parsed' });
+
+    if (obj.type === 'commit') {
+      const c = obj.object as CommitObject;
+      await git.writeCommit({ fs, gitdir: destDir, commit: c });
+      await copyObject(c.tree);
+      for (const parent of c.parent) await copyObject(parent);
+    } else if (obj.type === 'tree') {
+      const entries = obj.object as TreeEntry[];
+      await git.writeTree({ fs, gitdir: destDir, tree: entries });
+      for (const entry of entries) await copyObject(entry.oid);
+    } else if (obj.type === 'blob') {
+      await git.writeBlob({ fs, gitdir: destDir, blob: obj.object as Uint8Array });
+    }
+  }
+
+  await copyObject(sha);
 }
-*/
+
+/**
+ * git clone <url> [<directory>]
+ *
+ * Clones a remote repo by copying all objects, setting up refs, and checking out files.
+ * No HTTP needed — all done via local filesystem.
+ */
+export async function clone(ctx: CommandContext): Promise<string> {
+  const { args } = ctx;
+  const userUrl = args[0];
+  if (!userUrl) return 'fatal: You must specify a repository to clone.';
+
+  // Extract repo name from URL for default directory name
+  const repoName = userUrl.split('/').pop()?.replace(/\.git$/, '') ?? '';
+  const targetDir = args[1] ? resolvePath(args[1]) : resolvePath(repoName);
+
+  const bareDir = urlToPath(userUrl);
+  if (!bareDir) return 'fatal: invalid repository URL';
+  if (!(await exists(fs, bareDir, 'dir'))) return `fatal: repository '${userUrl}' not found`;
+
+  try {
+    // Create target dir and init
+    await mkdir({ args: [targetDir], flags: { p: true } });
+    await git.init({ fs, dir: targetDir });
+
+    // Store the display URL as origin (same as real git)
+    await git.addRemote({ fs, dir: targetDir, remote: 'origin', url: userUrl });
+
+    // Resolve the remote's HEAD branch
+    let remoteSha: string;
+    try {
+      remoteSha = await git.resolveRef({ fs, gitdir: bareDir, ref: 'refs/heads/main' });
+    } catch {
+      // Empty repo — nothing to clone
+      return `Cloning into '${repoName}'...\nwarning: remote HEAD refers to nonexistent ref, unable to checkout.`;
+    }
+
+    // Copy all objects
+    await copyMissingObjects(bareDir, `${targetDir}/.git`, remoteSha);
+
+    // Set up local branch ref
+    await git.writeRef({ fs, dir: targetDir, ref: 'refs/heads/main', value: remoteSha, force: true });
+    await git.writeRef({ fs, dir: targetDir, ref: 'HEAD', value: 'refs/heads/main', force: true, symbolic: true });
+
+    // Checkout working tree
+    await git.checkout({ fs, dir: targetDir, ref: 'main', force: true });
+
+    return `Cloning into '${repoName}'... done.`;
+  } catch (err: unknown) {
+    return `fatal: ${(err as Error).message}`;
+  }
+}
 
 // git add <file>
 export async function add(ctx: CommandContext): Promise<string> {
@@ -191,6 +274,11 @@ export async function add(ctx: CommandContext): Promise<string> {
   const dir = getCwd();   // Current working directory from Zustand store
 
   if (args.length == 0) return "git add: missing file operand. Use 'git add <file>' to specify a file, or 'git add .' to stage all files in the current directory.";
+
+  // Check we're inside a git repo
+  if (!(await exists(fs, `${dir}/.git`, 'dir'))) {
+    return 'fatal: not a git repository (or any of the parent directories): .git';
+  }
 
   try {
     // Isomorphic-Git can't handle '.' by default, so walk directory and add each file individually
@@ -216,46 +304,306 @@ export async function add(ctx: CommandContext): Promise<string> {
     }
     return `added ${args.length} file(s)`;
   } catch (err: unknown) {
-    return `git: ${(err as Error).message}`;
+    const msg = (err as Error).message ?? '';
+    if (msg.includes('ENOENT') || msg.includes('does not exist')) {
+      return `fatal: pathspec '${args[0]}' did not match any files`;
+    }
+    return `error: ${msg}`;
   }
 }
 
 
-// git commit -m "message"
+/**
+ * git commit -m "message"
+ * Records staged changes as a new commit.
+ */
 export async function commit(ctx: CommandContext): Promise<string> {
   const { flags, args } = ctx;
+  const dir = getCwd();
 
-  if (flags.length == '0') return "";
+  // Check we're inside a git repo
+  if (!(await exists(fs, `${dir}/.git`, 'dir'))) {
+    return 'fatal: not a git repository (or any of the parent directories): .git';
+  }
 
+  // Check for -m flag
+  if (!flags['m']) {
+    return `error: switch 'm' requires a value\nusage: git commit -m <message>`;
+  }
+
+  // Message is the first positional arg (parser strips quotes)
   const message = args[0];
-
-  if (!message) return "error: switch `m' requires a value";
+  if (!message) {
+    return `error: switch 'm' requires a value`;
+  }
 
   try {
+    // Get the actual branch name for the output message
+    let branch = 'main';
+    try {
+      branch = (await git.currentBranch({ fs, dir })) ?? 'main';
+    } catch { /* use default */ }
+
     const sha = await git.commit({
       fs,
-      dir: getCwd(),
+      dir,
       message,
       author: {
         name: "Student Learner",
         email: "student@example.local",
       },
     });
-    // Return a message similar to the default git commit output, showing the first 7 characters of the commit SHA and the commit message
-    return `[main ${sha.substring(0, 7)}] ${message}`;
-  } catch {
-    return `nothing to commit, working tree clean`;
+
+    return `[${branch} ${sha.substring(0, 7)}] ${message}`;
+  } catch (err: unknown) {
+    const msg = (err as Error).message ?? '';
+    if (msg.includes('nothing to commit') || msg.includes('no changes')) {
+      return 'nothing to commit, working tree clean';
+    }
+    return `error: ${msg}`;
   }
 }
 
-// For these we will need to simulate a remote repo with FS or in memory
-// Preface with _ as they dont actually make use of context
-/*
-export async function push(_ctx: CommandContext): Promise<string> {
-  return "Everything up-to-date";
+export async function push(ctx: CommandContext): Promise<string> {
+  const { args } = ctx;
+  const dir = getCwd();
+  const remoteName = args[0] || 'origin';
+  const branch = args[1] || 'main'; // Assume pushing to main for teaching
+
+  try {
+    // Read URL from the config
+    const remotes = await git.listRemotes({ fs, dir });
+    const remoteConfig = remotes.find(r => r.remote === remoteName);
+    if (!remoteConfig) {
+      return `fatal: '${remoteName}' does not appear to be a git repository\n` +
+             `fatal: Could not read from remote repository.\n\n` +
+             `hint: Did you run 'git remote add ${remoteName} <url>'?`;
+    }
+
+    // Translate to path for LightningFS.
+    const localRemotePath = urlToPath(remoteConfig.url);
+    if (!localRemotePath) return `fatal: invalid remote URL`;
+
+    // Resolve the local branch SHA
+    let localSha: string;
+    try {
+      // First try the branch name the user specified (or 'main')
+      localSha = await git.resolveRef({ fs, dir, ref: `refs/heads/${branch}` });
+    } catch {
+      // If 'main' didn't work, check what branch HEAD actually points to
+      try {
+        const currentBranch = await git.currentBranch({ fs, dir });
+        if (currentBranch && currentBranch !== branch) {
+          return `error: src refspec '${branch}' does not match any\n` +
+                 `hint: Your current branch is '${currentBranch}'. Did you mean:\n` +
+                 `hint:   git push ${remoteName} ${currentBranch}`;
+        }
+      } catch { /* ignore */ }
+      return `error: src refspec '${branch}' does not match any\n` +
+             `error: failed to push some refs to '${remoteConfig.url}'`;
+    }
+
+    // Resolve the remote branch SHA (may not exist yet — first push)
+    let remoteSha: string | null = null;
+    try {
+      remoteSha = await git.resolveRef({ fs, gitdir: localRemotePath, ref: `refs/heads/${branch}` });
+    } catch { /* branch doesn't exist on remote yet */ }
+
+    if (remoteSha === localSha) return 'Everything up-to-date';
+
+    // Copy all objects the remote doesn't have. CREATE HELPER FUNCTION TO RECURSIVELY COPY.
+    await copyMissingObjects(`${dir}/.git`, localRemotePath, localSha);
+
+    // Update the remote's branch ref
+    await git.writeRef({ fs, gitdir: localRemotePath, ref: `refs/heads/${branch}`, value: localSha, force: true });
+
+    // Update the store so the UI knows to re-render
+    useAppStore.getState().bumpRevision();
+
+    // Return output similar to real git
+    if (remoteSha === null) {
+      return `To ${remoteConfig.url}\n * [new branch]      ${branch} -> ${branch}`;
+    }
+    return `To ${remoteConfig.url}\n   ${remoteSha.slice(0, 7)}..${localSha.slice(0, 7)}  ${branch} -> ${branch}`;
+
+  } catch (err: unknown) {
+    console.error('PUSH DEBUG:', err);
+    return `error: failed to push some refs to '${remoteName}'\n${(err as Error).message}`;
+  }
+
 }
 
-export async function pull(_ctx: CommandContext): Promise<string> {
-  return "Already up-to-date.";
+/**
+ * git pull [<remote>] [<branch>]
+ *
+ * Copies objects from the remote bare repo into the local repo,
+ * fast-forwards the local branch ref, and checks out the files.
+ * Defaults to `origin` and `main`.
+ */
+export async function pull(ctx: CommandContext): Promise<string> {
+  const { args } = ctx;
+  const dir = getCwd();
+  const remoteName = args[0] ?? 'origin';
+  const branch     = args[1] ?? 'main';
+
+  try {
+    const remotes = await git.listRemotes({ fs, dir });
+    const entry = remotes.find(r => r.remote === remoteName);
+    if (!entry) {
+      return `fatal: '${remoteName}' does not appear to be a git repository\n` +
+             `fatal: Could not read from remote repository.\n\n` +
+             `hint: Did you run 'git remote add ${remoteName} <url>'?`;
+    }
+
+    const bareDir = urlToPath(entry.url);
+    if (!bareDir) return `fatal: repository '${entry.url}' not found`;
+    if (!(await exists(fs, bareDir, 'dir'))) return `fatal: repository '${entry.url}' not found`;
+
+    // Resolve remote branch SHA
+    let remoteSha: string;
+    try {
+      remoteSha = await git.resolveRef({ fs, gitdir: bareDir, ref: `refs/heads/${branch}` });
+    } catch {
+      return `fatal: couldn't find remote ref ${branch}`;
+    }
+
+    // Resolve local branch SHA (may not exist yet)
+    let localSha: string | null = null;
+    try {
+      localSha = await git.resolveRef({ fs, dir, ref: `refs/heads/${branch}` });
+    } catch { /* no local branch yet */ }
+
+    if (localSha === remoteSha) return 'Already up to date.';
+
+    // Copy objects from remote into local
+    await copyMissingObjects(bareDir, `${dir}/.git`, remoteSha);
+
+    // Update local branch ref
+    await git.writeRef({ fs, dir, ref: `refs/heads/${branch}`, value: remoteSha, force: true });
+
+    // Make sure HEAD points at the branch
+    await git.writeRef({ fs, dir, ref: 'HEAD', value: `refs/heads/${branch}`, force: true, symbolic: true });
+
+    // Checkout the files into the working directory
+    await git.checkout({ fs, dir, ref: branch, force: true });
+
+    const shortLocal  = localSha ? localSha.slice(0, 7) : '0000000';
+    const shortRemote = remoteSha.slice(0, 7);
+    return `Updating ${shortLocal}..${shortRemote}\nFast-forward`;
+
+  } catch (err: unknown) {
+    return `error: ${(err as Error).message}`;
+  }
 }
-*/
+
+/**
+ * git status
+ *
+ * Shows the working tree status — staged, unstaged, and untracked files.
+ * Output mirrors the format of real `git status`.
+ */
+export async function status(): Promise<string> {
+  const dir = getCwd();
+
+  try {
+    const matrix = await git.statusMatrix({ fs, dir });
+
+    const staged:    string[] = [];
+    const unstaged:  string[] = [];
+    const untracked: string[] = [];
+
+    for (const [filepath, head, workdir, index] of matrix) {
+      if (head === 0 && workdir === 2 && index === 0) {
+        // New file, never tracked
+        untracked.push(filepath);
+      } else if (head === 0 && workdir === 2 && index === 2) {
+        // New file, staged
+        staged.push(`new file:   ${filepath}`);
+      } else if (head === 1 && workdir === 2 && index === 2) {
+        // Modified, staged
+        staged.push(`modified:   ${filepath}`);
+      } else if (head === 1 && workdir === 2 && index === 1) {
+        // Modified, not staged
+        unstaged.push(`modified:   ${filepath}`);
+      } else if (head === 1 && workdir === 0 && index === 0) {
+        // Deleted, staged
+        staged.push(`deleted:    ${filepath}`);
+      } else if (head === 1 && workdir === 0 && index === 1) {
+        // Deleted, not staged
+        unstaged.push(`deleted:    ${filepath}`);
+      }
+    }
+
+    const lines: string[] = [];
+
+    let branch = 'main';
+    try {
+      branch = (await git.currentBranch({ fs, dir })) ?? 'main';
+    } catch { /* use default */ }
+
+    lines.push(`On branch ${branch}`);
+
+    if (staged.length === 0 && unstaged.length === 0 && untracked.length === 0) {
+      lines.push('nothing to commit, working tree clean');
+      return lines.join('\r\n');
+    }
+
+    if (staged.length > 0) {
+      lines.push('', 'Changes to be committed:');
+      lines.push('  (use "git restore --staged <file>..." to unstage)');
+      for (const f of staged) lines.push(`\t\t${f}`);
+    }
+
+    if (unstaged.length > 0) {
+      lines.push('', 'Changes not staged for commit:');
+      lines.push('  (use "git add <file>..." to update what will be committed)');
+      for (const f of unstaged) lines.push(`\t\t${f}`);
+    }
+
+    if (untracked.length > 0) {
+      lines.push('', 'Untracked files:');
+      lines.push('  (use "git add <file>..." to include in what will be committed)');
+      for (const f of untracked) lines.push(`\t\t${f}`);
+    }
+
+    return lines.join('\r\n');
+  } catch {
+    return 'fatal: not a git repository (or any of the parent directories): .git';
+  }
+}
+
+/**
+ * git log
+ *
+ * Shows the commit history for the current branch.
+ * Output mirrors the format of real `git log`.
+ */
+export async function log(): Promise<string> {
+  const dir = getCwd();
+
+  try {
+    const commits = await git.log({ fs, dir });
+
+    if (commits.length === 0) {
+      return 'fatal: your current branch does not have any commits yet';
+    }
+
+    const lines: string[] = [];
+
+    for (const entry of commits) {
+      const { oid, commit: c } = entry;
+      const date = new Date(c.author.timestamp * 1000);
+
+      lines.push(`commit ${oid}`);
+      lines.push(`Author: ${c.author.name} <${c.author.email}>`);
+      lines.push(`Date:   ${date.toLocaleString()}`);
+      lines.push('');
+      lines.push(`    ${c.message}`);
+      lines.push('');
+    }
+
+    return lines.join('\r\n');
+  } catch {
+    return 'fatal: not a git repository (or any of the parent directories): .git';
+  }
+}

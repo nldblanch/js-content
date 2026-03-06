@@ -3,7 +3,8 @@ import { useTerminalStore } from "../../store/useTerminalStore.ts";
 import FS from '@isomorphic-git/lightning-fs'
 import fs from '../fileSystem.ts';
 import type { CommandContext } from "../../types.ts";
-import { resolvePath, exists } from "./helpers.ts";
+import { resolvePath, exists, isFsError } from "./helpers.ts";
+
 
 /**
  *  Finds and returns the contents of a directory, with options for showing hidden files and long format.
@@ -83,7 +84,7 @@ export async function touch(ctx: CommandContext): Promise<string> {
       }
     })
   );
-  return results.filter(Boolean).join('\n');
+  return results.filter(Boolean).join('\r\n');
 }
 
 /**
@@ -108,9 +109,8 @@ export async function mkdir(ctx: CommandContext): Promise<string> {
         try {
           await fs.promises.mkdir(currentPath);
         } catch (err: unknown) {
-          const error = err as { code?: string; message?: string };
           // Ignore if it already exists, otherwise re-throw
-          if (error.code !== 'EEXIST' && error.message !== 'Directory already exists') {
+          if (!isFsError(err) || err.code !== 'EEXIST') {
             throw err;
           }
         }
@@ -121,8 +121,7 @@ export async function mkdir(ctx: CommandContext): Promise<string> {
         await fs.promises.mkdir(targetPath);
         return "";
       } catch (err: unknown) {
-        const error = err as { code?: string; message?: string };
-        if (error.code === 'EEXIST' || error.message === 'Directory already exists') {
+        if (isFsError(err) && err.code === 'EEXIST') {
           return `mkdir: '${arg}': File exists`;
         }
         return `mkdir: '${arg}': No such file or directory`;
@@ -130,7 +129,7 @@ export async function mkdir(ctx: CommandContext): Promise<string> {
     }
   }));
 
-  return results.filter(Boolean).join('\n');
+  return results.filter(Boolean).join('\r\n');
 }
 
 /**

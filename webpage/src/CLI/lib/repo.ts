@@ -1,24 +1,115 @@
 // Handle functions related to remote repo management
 
-import git from "isomorphic-git";
-import fs from "./fileSystem";
-import { useRepoStore } from "../store/useRepoStore";
-import { useAppStore } from "../store/useAppStore";
+import git from 'isomorphic-git';
+import fs from './fileSystem';
+import { useRepoStore } from '../store/useRepoStore';
+import { useAppStore } from '../store/useAppStore';
+import { isFsError } from './commands/helpers';
+import type { TreeEntry } from 'isomorphic-git';
 
-export async function createRepo(
-  name: string,
-  addReadme: boolean = false,
-): Promise<void> {
-  const dir = `/remote/${name}.git`;
+async function seedReadme(gitdir: string, repoName: string): Promise<void> {
+  const content = `# ${repoName}\n`;
+  const encoder = new TextEncoder();
 
-  // Create the directory and initialise as a bare repo
-  await fs.promises.mkdir("/remote").catch(() => {}); // Ensure /remote exists
-  await fs.promises.mkdir(dir);
-  await git.init({ fs, dir, bare: true }); // Init as bare repo
+  // Write blob (raw file content)
+  const blobOid = await git.writeBlob({
+    fs,
+    gitdir,
+    blob: encoder.encode(content),
+  });
 
-  // If README requested, write it directly into the bare repo
+  // Write a tree containing the blob as "README.md"
+  const treeOid = await git.writeTree({
+    fs,
+    gitdir,
+    tree: [
+      { mode: '100644', path: 'README.md', oid: blobOid, type: 'blob' } as TreeEntry,
+    ],
+  });
+
+  // Write the initial commit
+  const commitOid = await git.writeCommit({
+    fs,
+    gitdir,
+    commit: {
+      message: 'Initial commit',
+      tree: treeOid,
+      parent: [],
+      author: {
+        name: 'GitHub',
+        email: 'noreply@github.com',
+        timestamp: Math.floor(Date.now() / 1000),
+        timezoneOffset: 0,
+      },
+      committer: {
+        name: 'GitHub',
+        email: 'noreply@github.com',
+        timestamp: Math.floor(Date.now() / 1000),
+        timezoneOffset: 0,
+      },
+    },
+  });
+
+  // Point main at the new commit
+  await git.writeRef({
+    fs,
+    gitdir,
+    ref: 'refs/heads/main',
+    value: commitOid,
+    force: true,
+  });
+}
+
+type ValidationResult =
+  | { valid: true; sanitized: string }
+  | { valid: false; error: string };
+
+export async function validateRepoName(raw: string): Promise<ValidationResult> {
+  let name = raw.trim();
+  name = name.replace(/\s+/g, '-');                 // spaces → hyphens
+  name = name.replace(/[^a-zA-Z0-9._-]/g, '');      // strip invalid characters
+  name = name.replace(/\.{2,}/g, '.');              // collapse consecutive dots
+  name = name.replace(/-{2,}/g, '-');               // collapse consecutive hyphens
+  name = name.replace(/^[.-]+|[.-]+$/g, '');        // strip leading/trailing dots & hyphens
+
+  if (name.length === 0) return { valid: false, error: 'Repository name cannot be empty.' };
+  if (name.length > 100) return { valid: false, error: 'Repository name cannot exceed 100 characters.' };
+  if (name === '.' || name === '..') return { valid: false, error: 'Repository name cannot be "." or "..".' };
+
+  return { valid: true, sanitized: name };
+}
+
+export async function createRepo(name: string, addReadme: boolean = false): Promise<void> {
+  const result = await validateRepoName(name);
+  if (!result.valid) {
+    throw new Error(result.error);
+  }
+
+  const sanitized = result.sanitized;
+  const dir = `/remote/${sanitized}.git`;
+
+  // Ensure /remote exists
+  await fs.promises.mkdir('/remote').catch(() => {});
+
+  // Create the directory — if it somehow already exists, give a clear error
+  try {
+    await fs.promises.mkdir(dir);
+  } catch (err: unknown) {
+    if (isFsError(err) && err.code === 'EEXIST') {
+      throw new Error(`Repository '${sanitized}' already exists.`);
+    }
+    throw new Error(`Failed to create repository directory: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
+  // Initialise as a bare repo
+  await git.init({ fs, dir, bare: true });
+
+  // Override HEAD to default to 'main' instead of 'master'
+  await fs.promises.writeFile(`${dir}/HEAD`, 'ref: refs/heads/main\n');
+
+  // Seed with README if requested
   if (addReadme) {
-    console.log("This feature needs to be implemented!");
+    await seedReadme(dir, sanitized);
   }
 
   // Update the store
@@ -26,10 +117,12 @@ export async function createRepo(
   useAppStore.getState().bumpRevision();
 }
 
+
+
 export async function hasRemoteRepo(): Promise<boolean> {
   try {
-    const contents = await fs.promises.readdir("/remote");
-    return contents.filter((f: string) => f.endsWith(".git")).length > 0;
+    const contents = await fs.promises.readdir('/remote');
+    return contents.filter((f: string) => f.endsWith('.git')).length > 0;
   } catch {
     return false;
   }
@@ -41,10 +134,10 @@ export async function hasRemoteRepo(): Promise<boolean> {
  */
 export async function fetchRemoteRepos(): Promise<string[]> {
   try {
-    const contents = await fs.promises.readdir("/remote");
+    const contents = await fs.promises.readdir('/remote');
 
     return contents
-      .filter((f: string) => f.endsWith(".git"))
+      .filter((f: string) => f.endsWith('.git'))
       .map((repo) => `/remote/${repo}`);
   } catch {
     return [];
@@ -52,67 +145,43 @@ export async function fetchRemoteRepos(): Promise<string[]> {
 }
 
 /**
- * Get the commit log for a repo
+ * Get the commit log for a repo (bare repo — use gitdir directly)
  */
 export async function getCommits(repoDir: string) {
   try {
-    return await git.log({ fs, dir: repoDir });
+    return await git.log({ fs, gitdir: repoDir });
   } catch {
     return [];
   }
 }
 
 /**
- * Get the top-level file tree from the latest commit
- * @returns Array of objects with name and whether they are a directory.
+ * Get the file tree for a given ref and optional subfolder path.
+ * Uses `gitdir` instead of `dir` because remote repos are bare —
+ * their git objects live directly in the repo folder, not in a .git subfolder.
+ *
+ * @returns Array of objects with name, isDir, and path.
  */
-export async function getFileTree(
-  repoDir: string,
-  ref: string,
-  folderPath: string = "",
-) {
+export async function getFileTree(repoDir: string, ref: string, folderPath: string = "") {
   try {
-    // Get the flat list of ALL files in the commit
-    const files = await git.listFiles({ fs, dir: repoDir, ref });
+    // For bare repos, the repoDir IS the gitdir (no .git subfolder)
+    const commitSha = await git.resolveRef({ fs, gitdir: repoDir, ref: `refs/heads/${ref}` });
 
-    // Ensure folderPath ends with a slash for easier filtering, unless it's root
-    const normalizedFolder =
-      folderPath === "" || folderPath === "/"
-        ? ""
-        : folderPath.endsWith("/")
-          ? folderPath
-          : `${folderPath}/`;
+    const { tree } = folderPath
+      ? await git.readTree({ fs, gitdir: repoDir, oid: commitSha, filepath: folderPath })
+      : await git.readTree({ fs, gitdir: repoDir, oid: commitSha });
 
-    // De-duplicate top-level entries and determine if dir or file
-    const entries = files.reduce(
-      (acc: { name: string; isDir: boolean; path: string }[], filePath) => {
-        // Only search within the provided folder path.
-        if (filePath.startsWith(normalizedFolder)) {
-          // Get the part of the path relative to the current folder
-          const relativePath = filePath.slice(normalizedFolder.length);
-          const parts = relativePath.split("/");
+    const entries = tree.map(entry => ({
+      name: entry.path,
+      isDir: entry.type === 'tree',
+      path: folderPath ? `${folderPath}/${entry.path}` : entry.path,
+    }));
 
-          const name = parts[0]; // Get the top level entry in this folder (could be a file or a subfolder)
-          if (!name) return acc; // Skip if empty (can happen with trailing slashes)
-
-          const isDir = parts.length > 1; // If there are multiple parts, it's a directory
-          const fullPath = normalizedFolder + name; // Construct the full relative path for this entry
-
-          // If we haven't seen this name at this level yet, add to accumulator
-          if (!acc.find((e) => e.name === name)) {
-            acc.push({ name, isDir, path: fullPath });
-          }
-        }
-        return acc; // Return accumulator for the next iteration
-      },
-      [],
-    );
-
-    // Sort so directories appear before files, and then alphabetically within those groups
     return entries.sort((a, b) => {
       if (a.isDir === b.isDir) return a.name.localeCompare(b.name);
       return a.isDir ? -1 : 1;
     });
+
   } catch (error) {
     console.error("Error reading file tree:", error);
     return [];
