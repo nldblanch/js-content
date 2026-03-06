@@ -45,7 +45,7 @@ const NavBar = () => {
           routes.EXTRA_TASKS,
           routes.HELP,
           routes.CREDITS,
-          routes.CLI,
+          ...(import.meta.env.VITE_ENABLE_CLI === "true" ? [routes.CLI] : []),
         ].map(({ label, path }) => {
           return (
             <li key={label} className="grow">

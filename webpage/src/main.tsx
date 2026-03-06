@@ -23,10 +23,9 @@ const router = createBrowserRouter(
           path: routes.INSTRUCTION_DETAIL.path,
           element: <Instructions />,
         },
-        {
-          path: routes.CLI.path,
-          element: <CLI />,
-        },
+        ...(import.meta.env.VITE_ENABLE_CLI === "true"
+          ? [{ path: routes.CLI.path, element: <CLI /> }]
+          : []),
         {
           path: "*",
           element: (
