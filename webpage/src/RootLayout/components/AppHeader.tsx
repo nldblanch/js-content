@@ -2,17 +2,14 @@ import { Link, useLocation } from "react-router";
 import routes from "../../routes";
 import { getAsset } from "../../utils/getAsset";
 import { CLI_FEATURE_FLAG } from "../../config";
+import { WindowControlButtons } from "../../ui/WindowControlButtons"
 
 const Banner = () => {
 
     return (
         <div className="w-full bg-black-700 flex justify-between items-center px-4 py-2">
-            <div className="flex justify-evenly gap-2">
-                {["bg-red-500", "bg-yellow-500", "bg-green-500"].map((color) => {
-                    return <div key={color} className={`rounded-full aspect-square h-3 ${color}`} />
-                })}
-            </div>
-            <h1 className="text-4xl font-mono font-semibold text-gray">JavaScript Content</h1>
+            <WindowControlButtons />
+            <h1 className="text-5xl font-mono font-semibold text-gray">JavaScript Content</h1>
             <div className="flex gap-4 justify-between">
                 <img src={getAsset("sunshine.svg")} className="h-8 aspect-square" alt="Theme" />
                 <img src={getAsset("help.svg")} className="h-8 aspect-square" alt="Help" />
@@ -22,6 +19,7 @@ const Banner = () => {
 }
 
 const NavBar = () => {
+    const activeTab = useLocation().pathname.split("/")[1] || "";
   return (
     <nav className="w-full bg-black-800">
       <ul className="flex justify-evenly items-center flex-nowrap">
@@ -38,7 +36,7 @@ const NavBar = () => {
             <li key={label} className="grow font-fira">
               <Link
                 to={path}
-                className="text-gray text-center text-md block py-2 px-4 hover:bg-black-900 cursor-pointer"
+                className={`text-gray text-center text-md block py-2 px-4 hover:bg-black-900 cursor-pointer text-2xl ${activeTab === path.split("/")[1] ? "bg-black-900" : ""}`}
               >
                 {label}
               </Link>
@@ -54,7 +52,7 @@ const Breadcrumbs = () => {
   const activeTab = useLocation().pathname.split("/")[1] || "home";
 
     return (
-        <nav className="bg-black-900 w-full text-white/20 px-4 py-2 text-sm font-mono">
+        <nav className="bg-black-900 w-full text-white/20 px-4 py-2 text-2xl font-mono">
             {`src > ${activeTab.split(' ').join('-')}.html`}
         </nav>
     )

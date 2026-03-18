@@ -1,12 +1,14 @@
 import { Link } from "react-router";
 import { getAsset } from "../utils/getAsset";
 import routes from "../routes";
+import { VSCodeWindow } from "../ui/VSCodeWindow";
 
 export default function Home() {
 
     return (
         <div className="page-container">
 
+            {/* Making JavaScript Easy */}
             <div className="flex flex-col grow-0 max-w-fit items-end justify-center">
                 <h1 className="text-6xl font-sans font-extrabold leading-tight text-white">
                     Making JavaScript{' '}
@@ -32,6 +34,21 @@ export default function Home() {
                     <img src={getAsset('arrow.svg')} className="inline-block h-8 text-black-700" />
                 </div>
             </Link>
+
+            {/* Code block */}
+
+            <VSCodeWindow title="example.js">
+{`function greetStudent(name) {
+  const message = 'Welcome to the JavaScript course, ${name}!';
+  console.log(message);
+  return message;
+}
+
+// Try it yourself
+greetStudent('Developer');`}
+            </VSCodeWindow>
+
+            {/* Course topics */}
         </div>
     );
 }
