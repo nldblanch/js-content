@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
-import { challenges } from '../../lib/challenges';
-import { useChallengeStore } from '../../store/useChallengeStore';
-import { useAppStore } from '../../store/useAppStore';
+import { challenges } from '@/lib/challenges';
+import { useChallengeStore } from '@/store/useChallengeStore';
+import { useAppStore } from '@/store/useAppStore';
 import { CheckCircle2, Circle, ChevronRight, Lightbulb } from 'lucide-react';
 
 export default function Challenges() {
   const results = useChallengeStore(state => state.results);
   const runChecks = useChallengeStore(state => state.runChecks);
   const gitRevision = useAppStore(state => state.gitRevision);
+
+  // Set the browser URL when this page becomes the active tab
+  useEffect(() => {
+    useAppStore.getState().setBrowserUrl('https://localhost:3000/home');
+  }, []);
 
   // Re-run checks on mount and whenever gitRevision changes
   // (gitRevision bumps after push/createRepo, covering browser-side actions)

@@ -1,8 +1,8 @@
 // Shell commands (ls, cd, mkdir, touch, cat, echo etc.)
-import { useTerminalStore } from "../../store/useTerminalStore.ts";
+import { useTerminalStore } from "@/store/useTerminalStore.ts";
 import FS from '@isomorphic-git/lightning-fs'
-import fs from '../fileSystem.ts';
-import type { CommandContext } from "../../types.ts";
+import fs from '@/lib/fileSystem.ts';
+import type { CommandContext } from "@/types.ts";
 import { resolvePath, exists, isFsError } from "./helpers.ts";
 
 

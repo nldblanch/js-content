@@ -1,5 +1,5 @@
 import type FS from "@isomorphic-git/lightning-fs";
-import { useTerminalStore } from "../../store/useTerminalStore.ts";
+import { useTerminalStore } from "@/store/useTerminalStore.ts";
 
 /** Type guard for lightning-fs errors, which extend Error with a `code` property */
 export function isFsError(err: unknown): err is Error & { code: string } {

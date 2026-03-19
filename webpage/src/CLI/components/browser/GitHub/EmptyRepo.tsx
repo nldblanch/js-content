@@ -1,8 +1,8 @@
-interface EmptyStateProps {
+interface Props {
   openForm: () => void;
 }
 
-const EmptyState = ({ openForm }: EmptyStateProps) => {
+const EmptyState = ({ openForm }: Props) => {
 
   return (
     <div className="bg-[#0d1117] min-h-full text-[#c9d1d9] p-8 font-sans">

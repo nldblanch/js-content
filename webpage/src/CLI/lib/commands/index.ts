@@ -1,8 +1,8 @@
 // Imports
 import * as shell from "./shell";
-import * as git from "./git";
-import type { CommandContext, CommandFn } from "../../types.ts";
-import { useChallengeStore } from "../../store/useChallengeStore.ts";
+import * as git from "./git/index";
+import type { CommandContext, CommandFn } from "@/types.ts";
+import { useChallengeStore } from "@/store/useChallengeStore.ts";
 
 /**
  * Register command modules to be accessible within the environment.

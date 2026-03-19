@@ -2,8 +2,8 @@ import { Terminal as XTerm } from '@xterm/xterm';
 import '@xterm/xterm/css/xterm.css';
 import { FitAddon } from '@xterm/addon-fit';
 import { useEffect, useRef } from 'react';
-import { dispatchCommand } from '../../lib/commands/index.ts';
-import { getCwd } from '../../store/useTerminalStore.ts';
+import { dispatchCommand } from '@/lib/commands/index.ts';
+import { getCwd } from '@/store/useTerminalStore.ts';
 
 
 function Terminal() {

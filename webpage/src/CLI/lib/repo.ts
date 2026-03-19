@@ -2,8 +2,8 @@
 
 import git from 'isomorphic-git';
 import fs from './fileSystem';
-import { useRepoStore } from '../store/useRepoStore';
-import { useAppStore } from '../store/useAppStore';
+import { useRepoStore } from '@/store/useRepoStore';
+import { useAppStore } from '@/store/useAppStore';
 import { isFsError } from './commands/helpers';
 import type { TreeEntry } from 'isomorphic-git';
 

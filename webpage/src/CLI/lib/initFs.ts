@@ -1,5 +1,5 @@
 import fs from './fileSystem.ts';
-import { useTerminalStore } from "../store/useTerminalStore.ts";
+import { useTerminalStore } from "@/store/useTerminalStore.ts";
 import { isFsError } from './commands/helpers.ts';
 
 async function mkdirSafe(path: string) {

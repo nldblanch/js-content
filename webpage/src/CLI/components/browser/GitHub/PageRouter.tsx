@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { hasRemoteRepo, createRepo } from "../../../lib/repo";
-import { useRepoStore } from "../../../store/useRepoStore";
-import { useAppStore } from "../../../store/useAppStore";
+import { hasRemoteRepo, createRepo } from "@/lib/repo";
+import { useRepoStore } from "@/store/useRepoStore";
 
 // Import Pages
 import CreateRepoForm from "./CreateRepoForm";
@@ -11,55 +10,50 @@ import EmptyState from "./EmptyRepo";
 
 type ViewState = 'EMPTY' | 'CREATE_FORM' | 'REPO_INDEX' | 'REPO_VIEW';
 
-const BASE_URL = 'https://github.com';
-const USERNAME = 'user';
-
 function PageRouter() {
   const [view, setView] = useState<ViewState>('EMPTY');
-  const setBrowserUrl = useAppStore(state => state.setBrowserUrl);
 
   // Helper to set view AND url in store
-  const navigate = (newView: ViewState, url: string) => {
+  const navigate = (newView: ViewState) => {
     setView(newView);
-    setBrowserUrl(url);
   };
 
   useEffect(() => {
     hasRemoteRepo().then(exists => {
-      if (exists) navigate('REPO_INDEX', `${BASE_URL}/${USERNAME}`);
+      if (exists) navigate('REPO_INDEX');
     });
   }, []);
 
   const handleCreateRepo = async (name: string, addReadme: boolean) => {
     await createRepo(name, addReadme);
-    navigate('REPO_VIEW', `${BASE_URL}/${USERNAME}/${name}`);
+    navigate('REPO_VIEW');
   };
 
   const handleSelectRepo = (repoDir: string) => {
-    const repoName = repoDir.split('/').pop()?.replace('.git', '') ?? '';
-    useRepoStore.getState().setRepoDir(repoDir);
-    navigate('REPO_VIEW', `${BASE_URL}/${USERNAME}/${repoName}`);
+    useRepoStore.getState().setRepoDir(repoDir);  // Set the selected repo in the store
+    navigate('REPO_VIEW');
   };
 
   return (
     <>
-      {(() => {
-        switch (view) {
-          case 'EMPTY':
-            return <EmptyState openForm={() => navigate('CREATE_FORM', `${BASE_URL}/new`)} />;
-          case 'CREATE_FORM':
-            return <CreateRepoForm onSubmit={handleCreateRepo} />;
-          case 'REPO_INDEX':
-            return <RepoIndex
-              onSelectRepo={handleSelectRepo}
-              onNewRepo={() => navigate('CREATE_FORM', `${BASE_URL}/new`)}
-            />;
-          case 'REPO_VIEW':
-            return <GithubRepo onNavigateToIndex={() => navigate('REPO_INDEX', `${BASE_URL}/${USERNAME}`)} />;
-          default:
-            return null;
-        }
-      })()}
+      {view === 'EMPTY' && (
+        <EmptyState openForm={() => navigate('CREATE_FORM')} />
+      )}
+
+      {view === 'CREATE_FORM' && (
+        <CreateRepoForm onSubmit={handleCreateRepo} />
+      )}
+
+      {view === 'REPO_INDEX' && (
+        <RepoIndex
+          onSelectRepo={handleSelectRepo}
+          onNewRepo={() => navigate('CREATE_FORM')}
+        />
+      )}
+
+      {view === 'REPO_VIEW' && (
+        <GithubRepo onNavigateToIndex={() => navigate('REPO_INDEX')} />
+      )}
     </>
   );
 }

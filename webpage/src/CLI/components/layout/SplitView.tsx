@@ -1,6 +1,6 @@
 import { Group, Panel, Separator } from 'react-resizable-panels';
 
-import Terminal from '../terminal/Terminal';
+import Terminal from '@/components/terminal/Terminal';
 import BrowserFrame from '../browser/BrowserFrame';
 import { BrowserTab } from '../browser/BrowserFrame';
 import Challenges from '../browser/Challenges';

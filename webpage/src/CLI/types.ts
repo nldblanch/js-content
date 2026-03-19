@@ -6,3 +6,16 @@ export interface CommandContext {
 }
 
 export type CommandFn = (ctx: CommandContext) => Promise<string>;
+
+// Glossary
+export interface CommandOption {
+  name: string;
+  desc: string;
+}
+
+export interface CommandDef {
+  command: string;
+  description: string;
+  flags?: CommandOption[]; // ? makes this property optional
+  args?: CommandOption[];  // ? makes this property optional
+}
