@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Book, Lock, ChevronDown, Info } from "lucide-react";
-import { useAppStore } from '@/store/useAppStore';
+import { useAppStore } from "@CLI/store/useAppStore";
 
 interface CreateRepoFormProps {
   onSubmit: (name: string, addReadme: boolean) => Promise<void>;
@@ -14,7 +14,7 @@ const CreateRepoForm = ({ onSubmit }: CreateRepoFormProps) => {
 
   // Set the browser URL when this page becomes the active tab
   useEffect(() => {
-    useAppStore.getState().setBrowserUrl('https://github.com/new');
+    useAppStore.getState().setBrowserUrl("https://github.com/new");
   }, []);
 
   const handleRepoNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

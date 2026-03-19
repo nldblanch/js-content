@@ -1,9 +1,9 @@
 import type FS from "@isomorphic-git/lightning-fs";
-import { useTerminalStore } from "@/store/useTerminalStore.ts";
+import { useTerminalStore } from "@CLI/store/useTerminalStore.ts";
 
 /** Type guard for lightning-fs errors, which extend Error with a `code` property */
 export function isFsError(err: unknown): err is Error & { code: string } {
-  return err instanceof Error && 'code' in err && typeof err.code === 'string';
+  return err instanceof Error && "code" in err && typeof err.code === "string";
 }
 
 /**
@@ -14,13 +14,13 @@ export const resolvePath = (input: string): string => {
 
   if (input == ".") return cwd;
 
-  const combined = input.startsWith('/') ? input : `${cwd}/${input}`;
+  const combined = input.startsWith("/") ? input : `${cwd}/${input}`;
   // Normalize: remove double slashes and trailing slashes (except root)
-  let normalized = combined.replace(/\/+/g, '/');
-  if (normalized.length > 1 && normalized.endsWith('/')) {
+  let normalized = combined.replace(/\/+/g, "/");
+  if (normalized.length > 1 && normalized.endsWith("/")) {
     normalized = normalized.slice(0, -1);
   }
-  return normalized || '/';
+  return normalized || "/";
 };
 
 /**
@@ -30,8 +30,11 @@ export const resolvePath = (input: string): string => {
  * @param type - Optional type to verify ("dir" or "file")
  * @returns A promise that resolves to true if the path exists (and matches the type if specified), otherwise false.
  */
-export const exists = async (fs: FS, path: string, type: string = ""): Promise<boolean> => {
-
+export const exists = async (
+  fs: FS,
+  path: string,
+  type: string = "",
+): Promise<boolean> => {
   try {
     // Check if path exists. e.g. if(exists(getCWD()))
     const stats = await fs.promises.stat(path);
@@ -45,7 +48,6 @@ export const exists = async (fs: FS, path: string, type: string = ""): Promise<b
   } catch {
     return false;
   }
-
 };
 
 /**
@@ -56,11 +58,11 @@ export const exists = async (fs: FS, path: string, type: string = ""): Promise<b
 export function urlToPath(url: string): string | null {
   try {
     const parsed = new URL(url);
-    if (parsed.hostname === 'github.com') {
-      const segments = parsed.pathname.split('/').filter(Boolean);
+    if (parsed.hostname === "github.com") {
+      const segments = parsed.pathname.split("/").filter(Boolean);
       // Needs at least /user/repo
       if (segments.length >= 2) {
-        const repoName = segments[segments.length - 1].replace(/\.git$/, '');
+        const repoName = segments[segments.length - 1].replace(/\.git$/, "");
         return `/remote/${repoName}.git`;
       }
     }

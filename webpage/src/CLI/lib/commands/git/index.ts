@@ -1,4 +1,4 @@
-import type { CommandContext } from "@/types.ts";
+import type { CommandContext } from "@CLI/types.ts";
 
 // Import all our subcommand handlers
 import { init } from "./init.ts";
@@ -14,20 +14,24 @@ import { log } from "./log.ts";
 export async function main(ctx: CommandContext): Promise<string> {
   const { subcmd } = ctx;
 
-  const subcommands: Record<string, (ctx: CommandContext) => Promise<string>> = {
-    "init":   init,
-    "remote": remote,
-    "clone":  clone,
-    "add":    add,
-    "commit": commit,
-    "push":   push,
-    "pull":   pull,
-    "status": status,
-    "log":    log,
-  };
+  const subcommands: Record<string, (ctx: CommandContext) => Promise<string>> =
+    {
+      init: init,
+      remote: remote,
+      clone: clone,
+      add: add,
+      commit: commit,
+      push: push,
+      pull: pull,
+      status: status,
+      log: log,
+    };
 
   const handler = subcommands[subcmd || ""];
-  if (!handler) return subcmd ? `git: '${subcmd}' is not a git command.` : "usage: git <command>";
+  if (!handler)
+    return subcmd
+      ? `git: '${subcmd}' is not a git command.`
+      : "usage: git <command>";
 
   return await handler(ctx);
 }

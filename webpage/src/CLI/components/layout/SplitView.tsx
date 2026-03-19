@@ -1,11 +1,11 @@
-import { Group, Panel, Separator } from 'react-resizable-panels';
+import { Group, Panel, Separator } from "react-resizable-panels";
 
-import Terminal from '@/components/terminal/Terminal';
-import BrowserFrame from '../browser/BrowserFrame';
-import { BrowserTab } from '../browser/BrowserFrame';
-import Challenges from '../browser/Challenges';
-import PageRouter from '../browser/GitHub/PageRouter';
-import Glossary from '../browser/Glossary';
+import Terminal from "@CLI/components/terminal/Terminal";
+import BrowserFrame from "@CLI/components/browser/BrowserFrame";
+import { BrowserTab } from "@CLI/components/browser/BrowserFrame";
+import Challenges from "@CLI/components/browser/Challenges";
+import PageRouter from "@CLI/components/browser/GitHub/PageRouter";
+import Glossary from "@CLI/components/browser/Glossary";
 
 const panelStyles = "bg-slate-800 rounded-md shadow-md overflow-hidden";
 
@@ -14,7 +14,6 @@ interface SplitViewProps {
 }
 
 function SplitView({ className }: SplitViewProps) {
-
   return (
     <>
       <Group className={`${className} w-full h-full flex`}>

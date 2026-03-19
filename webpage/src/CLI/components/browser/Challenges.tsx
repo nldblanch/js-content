@@ -1,17 +1,17 @@
-import { useEffect } from 'react';
-import { challenges } from '@/lib/challenges';
-import { useChallengeStore } from '@/store/useChallengeStore';
-import { useAppStore } from '@/store/useAppStore';
-import { CheckCircle2, Circle, ChevronRight, Lightbulb } from 'lucide-react';
+import { useEffect } from "react";
+import { challenges } from "@CLI/lib/challenges";
+import { useChallengeStore } from "@CLI/store/useChallengeStore";
+import { useAppStore } from "@CLI/store/useAppStore";
+import { CheckCircle2, Circle, ChevronRight, Lightbulb } from "lucide-react";
 
 export default function Challenges() {
-  const results = useChallengeStore(state => state.results);
-  const runChecks = useChallengeStore(state => state.runChecks);
-  const gitRevision = useAppStore(state => state.gitRevision);
+  const results = useChallengeStore((state) => state.results);
+  const runChecks = useChallengeStore((state) => state.runChecks);
+  const gitRevision = useAppStore((state) => state.gitRevision);
 
   // Set the browser URL when this page becomes the active tab
   useEffect(() => {
-    useAppStore.getState().setBrowserUrl('https://localhost:3000/home');
+    useAppStore.getState().setBrowserUrl("https://localhost:3000/home");
   }, []);
 
   // Re-run checks on mount and whenever gitRevision changes
@@ -31,10 +31,11 @@ export default function Challenges() {
       </p>
 
       <div className="grid gap-5">
-
         <div className="px-4 py-2 bg-red-200 rounded-lg shadow-md">
           <p className="font-semibold">
-            DEBUGGING: Run the command <code className="bg-red-100 px-1 rounded">clearFs</code> to reset the file system and remote repo.
+            DEBUGGING: Run the command{" "}
+            <code className="bg-red-100 px-1 rounded">clearFs</code> to reset
+            the file system and remote repo.
           </p>
         </div>
 
@@ -61,49 +62,73 @@ export default function Challenges() {
 }
 
 interface ChallengeCardProps {
-  challenge: typeof challenges[number];
+  challenge: (typeof challenges)[number];
   stepResults: boolean[];
   completedCount: number;
   totalSteps: number;
   isComplete: boolean;
 }
 
-function ChallengeCard({ challenge, stepResults, completedCount, totalSteps, isComplete }: ChallengeCardProps) {
+function ChallengeCard({
+  challenge,
+  stepResults,
+  completedCount,
+  totalSteps,
+  isComplete,
+}: ChallengeCardProps) {
   return (
-    <div className={`
+    <div
+      className={`
       p-4 rounded-lg border transition-colors
-      ${isComplete
-        ? 'bg-emerald-50 border-emerald-300'
-        : 'bg-slate-50 border-slate-200'}
-    `}>
+      ${
+        isComplete
+          ? "bg-emerald-50 border-emerald-300"
+          : "bg-slate-50 border-slate-200"
+      }
+    `}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-lg font-semibold flex items-center gap-2">
-          {isComplete
-            ? <CheckCircle2 size={20} className="text-emerald-500" />
-            : <ChevronRight size={20} className="text-slate-400" />
-          }
+          {isComplete ? (
+            <CheckCircle2 size={20} className="text-emerald-500" />
+          ) : (
+            <ChevronRight size={20} className="text-slate-400" />
+          )}
           {challenge.title}
         </h3>
-        <span className={`text-xs font-mono px-2 py-1 rounded-full ${
-          isComplete ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-200 text-slate-600'
-        }`}>
+        <span
+          className={`text-xs font-mono px-2 py-1 rounded-full ${
+            isComplete
+              ? "bg-emerald-200 text-emerald-800"
+              : "bg-slate-200 text-slate-600"
+          }`}
+        >
           {completedCount}/{totalSteps}
         </span>
       </div>
 
       {/* Description */}
-      <p className="text-sm text-slate-600 mb-3 ml-7">{challenge.description}</p>
+      <p className="text-sm text-slate-600 mb-3 ml-7">
+        {challenge.description}
+      </p>
 
       {/* Steps */}
       <div className="space-y-1.5 ml-7">
         {challenge.steps.map((step, i) => (
           <div key={i} className="flex items-center gap-2 text-sm">
-            {stepResults[i]
-              ? <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
-              : <Circle size={16} className="text-slate-300 shrink-0" />
-            }
-            <span className={stepResults[i] ? 'text-slate-500 line-through' : 'text-slate-700'}>
+            {stepResults[i] ? (
+              <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+            ) : (
+              <Circle size={16} className="text-slate-300 shrink-0" />
+            )}
+            <span
+              className={
+                stepResults[i]
+                  ? "text-slate-500 line-through"
+                  : "text-slate-700"
+              }
+            >
               {step.label}
             </span>
           </div>

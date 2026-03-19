@@ -1,5 +1,5 @@
-import { getCwd } from "@/store/useTerminalStore.ts";
-import type { CommandContext } from "@/types.ts";
+import { getCwd } from "@CLI/store/useTerminalStore.ts";
+import type { CommandContext } from "@CLI/types.ts";
 
 import { list } from "./list.ts";
 import { add } from "./add.ts";
@@ -18,18 +18,20 @@ export async function remote(ctx: CommandContext): Promise<string> {
   const subAction = args[0]; // 'add', 'remove', 'rename'
 
   switch (subAction) {
-    case 'add':
+    case "add":
       return await add(dir, args);
-    case 'rm':
-    case 'remove':
+    case "rm":
+    case "remove":
       return await remove(dir, args);
-    case 'rename':
+    case "rename":
       return await rename(dir, args);
     default:
-      return `error: Unknown subcommand: ${subAction}\n` +
-             `usage: git remote [-v]\n` +
-             `   or: git remote add <name> <url>\n` +
-             `   or: git remote rename <old> <new>\n` +
-             `   or: git remote remove <name>`;
+      return (
+        `error: Unknown subcommand: ${subAction}\n` +
+        `usage: git remote [-v]\n` +
+        `   or: git remote add <name> <url>\n` +
+        `   or: git remote rename <old> <new>\n` +
+        `   or: git remote remove <name>`
+      );
   }
 }
