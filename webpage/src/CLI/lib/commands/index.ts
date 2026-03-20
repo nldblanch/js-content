@@ -47,7 +47,7 @@ export async function dispatchCommand(input: string): Promise<string> {
       : await handler(ctx);
 
     // Re-evaluate challenge completion after every command
-    useChallengeStore.getState().runChecks();
+    await useChallengeStore.getState().runChecks();
 
     return result;
   } catch (err: unknown) {
