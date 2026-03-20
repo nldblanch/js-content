@@ -27,9 +27,9 @@ export default function Home() {
                 </h1>
             </div>
             <div className="w-full">
-                <p className="text-gray text-4xl font-normal px-8 font-fira mx-auto">A comprehensive course designed for beginners to master JavaScript fundamentals through hands-on exercises.</p>
+                <p className="text-gray text-3xl font-normal px-8 font-fira mx-auto text-center">A comprehensive course designed for beginners to master JavaScript fundamentals through hands-on exercises.</p>
             </div>
-            <Link to={routes.SETUP.path} className="bg-blue px-4 py-2 rounded-3xl max-h-68 flex items-center justify-center">
+            <Link to={routes.SETUP.path} className="bg-blue px-8 py-2 rounded-4xl max-h-68 flex items-center justify-center">
                 <button className="text-black-700 font-bold font-fira text-3xl">
                     Start Learning
                 </button>
