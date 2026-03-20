@@ -1,4 +1,6 @@
+import { BASE_URL } from "../config";
+
 export const getAsset = (path: string) => {
-    const basePath = import.meta.env.BASE_URL || '/';
+    const basePath = BASE_URL || '/';
     return `${basePath}${path}`;
 }
