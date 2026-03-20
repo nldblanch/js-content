@@ -6,9 +6,10 @@ import "prismjs/components/prism-javascript";
 interface Props {
     children: React.ReactNode;
     title: string;
+    code: string;
 }
 
-export const VSCodeWindow = ({ children, title }: Props) => {
+export const VSCodeWindow = ({ children, title, code }: Props) => {
 
     useEffect(() => {
         Prism.highlightAll();
@@ -20,12 +21,13 @@ export const VSCodeWindow = ({ children, title }: Props) => {
             <WindowControlButtons />
             <h2>{title}</h2>
         </div>
-        <div className="rounded-b-3xl py-4 px-6 bg-black-900">
+        <div className="rounded-b-3xl py-4 px-6 bg-black-900 text-2xl!">
             <pre className="prose prose-invert">
                 <code className="language-js text-2xl!">
-                    {children}
+                    {code}
                 </code>
             </pre>
+            {children}
         </div>
     </div>);
 };
