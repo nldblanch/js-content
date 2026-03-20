@@ -27,10 +27,10 @@ export async function remote(ctx: CommandContext): Promise<string> {
       return await rename(dir, args);
     default:
       return (
-        `error: Unknown subcommand: ${subAction}\n` +
-        `usage: git remote [-v]\n` +
-        `   or: git remote add <name> <url>\n` +
-        `   or: git remote rename <old> <new>\n` +
+        `error: Unknown subcommand: ${subAction}\r\n` +
+        `usage: git remote [-v]\r\n` +
+        `   or: git remote add <name> <url>\r\n` +
+        `   or: git remote rename <old> <new>\r\n` +
         `   or: git remote remove <name>`
       );
   }
