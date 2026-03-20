@@ -3,7 +3,7 @@ import fs from "@CLI/lib/fileSystem.ts";
 import { getCwd } from "@CLI/store/useTerminalStore.ts";
 import type { CommandContext } from "@CLI/types.ts";
 import { resolvePath, exists } from "../helpers.ts";
-import { mkdir } from "../shell.ts";
+import { mkdir } from "../shell/mkdir.ts";
 
 /**
  * Initializes a new Git repository.
