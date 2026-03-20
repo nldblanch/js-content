@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router";
 import routes from "../../routes";
 import { getAsset } from "../../utils/getAsset";
+import { CLI_FEATURE_FLAG } from "../../config";
 
 const Banner = () => {
   return (
@@ -45,7 +46,7 @@ const NavBar = () => {
           routes.EXTRA_TASKS,
           routes.HELP,
           routes.CREDITS,
-          ...(import.meta.env.VITE_ENABLE_CLI ? [routes.CLI] : []),
+          ...(CLI_FEATURE_FLAG ? [routes.CLI] : []),
         ].map(({ label, path }) => {
           return (
             <li key={label} className="grow">

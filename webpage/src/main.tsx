@@ -5,9 +5,9 @@ import RootLayout from "./RootLayout";
 import Instructions from "./Instructions";
 import CLI from "./CLI";
 import routes from "./routes";
+import { BASE_URL, CLI_FEATURE_FLAG } from "./config";
 
-const baseUrl = import.meta.env.BASE_URL;
-const basename = baseUrl === "/" ? undefined : baseUrl.replace(/\/$/, "");
+const basename = BASE_URL === "/" ? undefined : BASE_URL.replace(/\/$/, "");
 
 const router = createBrowserRouter(
   [
@@ -23,7 +23,7 @@ const router = createBrowserRouter(
           path: routes.INSTRUCTION_DETAIL.path,
           element: <Instructions />,
         },
-        ...(import.meta.env.VITE_ENABLE_CLI
+        ...(CLI_FEATURE_FLAG
           ? [{ path: routes.CLI.path, element: <CLI /> }]
           : []),
         {
