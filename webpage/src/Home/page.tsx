@@ -4,7 +4,8 @@ import routes from "../routes";
 import { VSCodeWindow } from "../ui/VSCodeWindow";
 
 export default function Home() {
-
+const vite = IMPORT.meta.env.VITE_ENABLE_CLI;
+console.log(vite, vite === 'true');
     return (
         <div className="page-container">
 
