@@ -1,75 +1,53 @@
-@import "tailwindcss";
-:root {
-    --primary-color: #00c7c3;
-    --primary-dark: #062832;
-    --text-light: #666;
-    --white: #ffffff;
-    --background: #ffffff;
-    --error-color: #e74c3c;
-    font-family: "M PLUS 1 Code", monospace;
-}
+ @import "tailwindcss";
+ @import "prism-themes/themes/prism-vsc-dark-plus.css";
 
-.particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-}
+ @theme {
+ 	--font-mono: "M PLUS 1 Code", monospace;
+ 	--font-libre: Libre Franklin, sans-serif;
+ 	--font-fira: Fira Mono, monospace;
+ 	--color-blue: #4EC9B0;
+ 	--color-white: #FFFFFF;
+ 	--color-gray: #A9A9A9;
+ 	--color-black-900: #1F1F1F;
+ 	--color-black-800: #252526;
+ 	--color-black-700: #3C3C3C;
+ 	--color-muted: #BCBCBC8C;
+ }
 
-.particle {
-    position: absolute;
-    border-radius: 50%;
-    background: var(--primary-color);
-    opacity: 0.3;
-    animation: float 15s infinite ease-in-out;
-}
+ .page-container {
+ 	@apply w-full flex flex-col items-center max-w-7xl mx-auto p-8 gap-8;
+ }
 
-@keyframes float {
-    0%,
-    100% {
-        transform: translateY(0) translateX(0);
-    }
-    25% {
-        transform: translateY(-100px) translateX(50px);
-    }
-    50% {
-        transform: translateY(-200px) translateX(-30px);
-    }
-    75% {
-        transform: translateY(-100px) translateX(-50px);
-    }
-}
+ /* MARKDOWN CSS */
+ #main {
+ 	padding: 40px;
+ }
 
-#main {
-    padding: 40px;
-}
-#nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+ #nav {
+ 	display: flex;
+ 	justify-content: center;
+ 	align-items: center;
+ }
 
-#nav ul {
-    max-width: 1028px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-}
+ #nav ul {
+ 	max-width: 1028px;
+ 	width: 100%;
+ 	display: flex;
+ 	align-items: center;
+ 	justify-content: start;
+ }
 
-#nav ul li {
-    list-style: none;
-    margin: 0 20px;
-    width: fit-content;
-}
+ #nav ul li {
+ 	list-style: none;
+ 	margin: 0 20px;
+ 	width: fit-content;
 
-.navlink:hover {
-    background-color: #00000011;
-}
+ }
 
-.accordion-link:nth-of-type(1) {
-    margin-top: 12px;
-}
+ .navlink:hover {
+ 	background-color: #00000011;
+ }
+
+ .accordion-link:nth-of-type(1) {
+ 	margin-top: 12px;
+ }
