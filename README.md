@@ -1,6 +1,23 @@
+<a id="top"></a>
 # JavaScript Learning Challenges
 
 A collection of JavaScript coding challenges designed to help you learn and practice JavaScript fundamentals.
+
+<details>
+<summary><strong>Table of Contents</strong></summary>
+
+- [Getting Started](#getting-started)
+- [Challenges](#challenges)
+  - [Challenge List](#challenge-list)
+- [How to Use](#how-to-use)
+- [Testing](#testing)
+  - [Run all tests](#run-all-tests)
+  - [Run test by filename](#run-test-by-filename)
+  - [Run tests by pattern](#run-tests-by-pattern)
+  - [Run tests in watch mode](#run-tests-in-watch-mode)
+- [Contributing to webpage (as a developer)](#contributing-to-webpage-as-a-developer)
+
+</details>
 
 ## Getting Started
 
@@ -21,7 +38,7 @@ npm install
 ```bash
 npm test
 ```
-
+[Back to top](#top)
 ## Challenges
 
 Each challenge is in its own directory with:
@@ -52,6 +69,7 @@ _*This challenge is still in the Proof of Concept stage. There may be problems o
 
 _**These challenges have not been migrated to the new format yet. Please refer to the pdf_instructions._
 
+[Back to top](#top)
 ## How to Use
 
 1. Navigate to any challenge directory
@@ -60,6 +78,7 @@ _**These challenges have not been migrated to the new format yet. Please refer t
 4. Run `npm test` to check your solution
 5. All tests should pass when your solution is correct
 
+[Back to top](#top)
 ## Testing
 
 ### Run all tests: 
@@ -93,3 +112,29 @@ npm test 1
 npm run test:watch
 ```
 _Other npm scripts (those with custom names) must be invoked with `npm run <script>`._
+
+[Back to top](#top)
+## Contributing to webpage (as a developer)
+1. From repo root, change directory to `webpage` directory
+```bash
+cd  webpage
+```
+
+2. Install dependencies: 
+```bash
+npm install
+```
+
+3. Start local development server
+```bash
+npm run dev
+```
+Local development server should start on http://localhost:5173/
+
+4. Run tests and see code coverage
+```bash
+npm run coverage
+```
+Code coverage will be outputted to `webpage/coverage/` directory.
+
+[Back to top](#top)
