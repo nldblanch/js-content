@@ -16,6 +16,7 @@ A collection of JavaScript coding challenges designed to help you learn and prac
   - [Run tests by pattern](#run-tests-by-pattern)
   - [Run tests in watch mode](#run-tests-in-watch-mode)
 - [Contributing to webpage (as a developer)](#contributing-to-webpage-as-a-developer)
+  - [Debug webpage in VSCode](#debug-webpage-in-vscode)
 
 </details>
 
@@ -129,12 +130,52 @@ npm install
 ```bash
 npm run dev
 ```
-Local development server should start on http://localhost:5173/
+Local development server should start on `http://localhost:5173/`
 
 4. Run tests and see code coverage
 ```bash
 npm run coverage
 ```
 Code coverage will be outputted to `webpage/coverage/` directory.
+
+[Back to top](#top)
+
+### Debug webpage in VSCode
+
+**For a more detailed guide, see [Microsoft’s official documentation on debugging React]( https://code.visualstudio.com/docs/nodejs/reactjs-tutorial#_debugging-react)**
+
+1. On VSCode, open any TypeScript (.tsx) file in `webpage/src`.
+
+2. On left-side panel click on ‘Run and Debug’ (shortcut: Ctrl + Shift + D).
+
+3. On 'Run and Debug' view, click ‘create a launch.json file’. (If you do not see this file, the reason is a `.vscode/launch.json` file already exists). You should will be presented with a list of debuggers, among them various web browsers such as Edge and Chrome. Pick one of these web browsers as a debugger. (This example assumes you pick Edge since it, installed by default, will always be available). Once you select a debugger, a new JSON file will be created that will be ignored by `.gitignore`: `.vscode/launch.json`.
+
+4. In this `launch.json` file you should see the `webRoot` property. By default, it will have the value `${workspaceFolder}`. The problem with this value is that the debugger will look for the React app in the project root directory when, in actuality, the React app is located in the `webpage` directory. For this reason, update this value to `${workspaceFolder}/webpage`.
+
+5. By default, the value for the `url` property will be `http://localhost:808,` but the development server is configured to start on port 5173. Therefore, update the value of the `url` property to `http://localhost:5173`.
+
+The final `launch.json` file should look as follows.
+
+```json
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "msedge",
+            "request": "launch",
+            "name": "Launch Edge against localhost",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/webpage",
+
+        }
+    ]
+}
+```
+
+6. Start the development server by following the [previous instructions](#contributing-to-webpage-as-a-developer). Once the local development server has started on `http://localhost:5173/`, press the green play button on the Run and Debug view (shortcut: F5) to start debugging. (Note that the development server must be running before you can start debugging).
 
 [Back to top](#top)
