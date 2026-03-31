@@ -144,6 +144,8 @@ Code coverage will be outputted to `webpage/coverage/` directory.
 
 **For a more detailed guide, see [Microsoft’s official documentation on debugging React]( https://code.visualstudio.com/docs/nodejs/reactjs-tutorial#_debugging-react)**
 
+*Note that, as a complement to debugging in VSCode, the [React Developer Tools browser extension](https://microsoftedge.microsoft.com/addons/detail/react-developer-tools/gpphkfbcpidddadnkolkpfckpihlkkil) is recommended. The component view, for example, allows you to interact with the component tree while viewing the React app as it is rendered to the browser.*
+
 1. On VSCode, open any TypeScript (.tsx) file in `webpage/src`.
 
 2. On left-side panel click on ‘Run and Debug’ (shortcut: Ctrl + Shift + D).
