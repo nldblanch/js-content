@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
 import { useChallengeInstructions } from "../hooks/useChallengeInstructions";
 import { FileAccordion } from "./FileAccordion";
-import routes from "../../routes";
+import routes from "@src/routes";
 
 export const Navigation = () => {
     const docs = useChallengeInstructions();

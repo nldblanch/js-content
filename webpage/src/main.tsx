@@ -1,11 +1,9 @@
 import "./index.css";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Link, RouterProvider } from "react-router";
-import RootLayout from "./RootLayout";
-import Instructions from "./Instructions";
+import { RootLayout, Home, Instructions, GettingStarted } from "@src/pages";
 import CLI from "./CLI";
-import routes from "./routes";
-import Home from "./Home";
+import routes from "@src/routes";
 import { BASE_URL, CLI_FEATURE_FLAG } from "./config";
 
 const basename = BASE_URL === "/" ? undefined : BASE_URL.replace(/\/$/, "");
@@ -16,10 +14,10 @@ const router = createBrowserRouter(
       path: "/",
       element: <RootLayout />,
       children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
+        {
+          path: "/",
+          element: <Home />,
+        },
         {
           path: routes.INSTRUCTIONS.path,
           element: <Instructions />,
@@ -27,6 +25,10 @@ const router = createBrowserRouter(
         {
           path: routes.INSTRUCTION_DETAIL.path,
           element: <Instructions />,
+        },
+        {
+          path: routes.SETUP.path,
+          element: <GettingStarted />,
         },
         ...(CLI_FEATURE_FLAG
           ? [{ path: routes.CLI.path, element: <CLI /> }]

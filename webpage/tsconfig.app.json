@@ -13,6 +13,8 @@
     "paths": {
       "@repo/*": ["../*"],
       "@CLI/*": ["src/CLI/*"],
+      "@src/*": ["src/*"],
+      "src/*": ["src/*"]
     },
 
     /* Bundler mode */

@@ -23,6 +23,8 @@ export default defineConfig({
     alias: {
       "@repo": path.resolve(__dirname, ".."),
       "@CLI": path.resolve(__dirname, "./src/CLI"),
+      "@src": path.resolve(__dirname, "./src"),
+      "src": path.resolve(__dirname, "./src"),
     },
   },
   server: {

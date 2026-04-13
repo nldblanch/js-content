@@ -1,17 +1,24 @@
  @import "tailwindcss";
  @import "prism-themes/themes/prism-vsc-dark-plus.css";
 
+ html {
+	scroll-behavior: smooth;
+ }
  @theme {
  	--font-mono: "M PLUS 1 Code", monospace;
  	--font-libre: Libre Franklin, sans-serif;
  	--font-fira: Fira Mono, monospace;
  	--color-blue: #4EC9B0;
+	--color-blue-hover: #79D6C3;
+	--color-blue-accent: #70E4CC;
+	--color-blue-accent-hover: #A9EFE0;
  	--color-white: #FFFFFF;
  	--color-gray: #A9A9A9;
  	--color-black-900: #1F1F1F;
  	--color-black-800: #252526;
  	--color-black-700: #3C3C3C;
  	--color-muted: #BCBCBC8C;
+	--color-orange: #CA8F76;
  }
 
  .page-container {

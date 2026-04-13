@@ -1,8 +1,8 @@
 import { Link, useLocation } from "react-router";
-import routes from "../../routes";
-import { getAsset } from "../../utils/getAsset";
-import { CLI_FEATURE_FLAG } from "../../config";
-import { WindowControlButtons } from "../../ui/WindowControlButtons"
+import routes from "@src/routes";
+import { getAsset } from "@src/utils/getAsset";
+import { CLI_FEATURE_FLAG } from "@src/config";
+import { WindowControlButtons } from "@src/ui/WindowControlButtons"
 
 const Banner = () => {
 
