@@ -1,9 +1,7 @@
 import { getAsset } from "@src/utils/getAsset";
 import type { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 const baseClass = "font-extrabold leading-tight text-white";
-const clsx = (...classes: (string | undefined)[]) => {
-    return classes.filter(Boolean).join(' ');
-}
 
 const variantStyles = {
     xxl: 'text-[80px] leading-[80px]',
@@ -69,7 +67,7 @@ export const Heading = ({
     const headingNode = (() => {
         if (children) {
             return (
-                <Tag className={clsx(baseClass, variantStyles[variant], fontStyles[font], className)}>
+                <Tag className={twMerge(baseClass, variantStyles[variant], fontStyles[font], className)}>
                     {children}
                 </Tag>
             );
@@ -81,14 +79,14 @@ export const Heading = ({
 
         if (!last) {
             return (
-                <Tag className={clsx(baseClass, variantStyles[variant], fontStyles[font], className)}>
+                <Tag className={twMerge(baseClass, variantStyles[variant], fontStyles[font], className)}>
                     {safeText}
                 </Tag>
             );
         }
 
         return (
-            <Tag className={clsx(baseClass, variantStyles[variant], fontStyles[font], className)}>
+            <Tag className={twMerge(baseClass, variantStyles[variant], fontStyles[font], className)}>
                 {words.join(' ')}{' '}
                 {highlight ? <HighlightedWord word={last} underline={underline} /> : last}
             </Tag>
@@ -100,7 +98,7 @@ export const Heading = ({
     }
 
     return (
-        <div className={clsx("flex flex-col grow-0 max-w-fit items-end justify-center", wrapperClassName)}>
+        <div className={twMerge("flex flex-col grow-0 max-w-fit items-end justify-center", wrapperClassName)}>
             {headingNode}
         </div>
     );

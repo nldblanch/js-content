@@ -8,6 +8,50 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/',
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+
+          if (
+            id.includes('/react/') ||
+            id.includes('/react-dom/') ||
+            id.includes('/react-router/')
+          ) {
+            return 'vendor-react';
+          }
+
+          if (id.includes('/zustand/')) return 'vendor-state';
+
+          if (
+            id.includes('/react-markdown/') ||
+            id.includes('/remark-gfm/')
+          ) {
+            return 'vendor-markdown';
+          }
+
+          if (
+            id.includes('/prismjs/') ||
+            id.includes('/prism-themes/')
+          ) {
+            return 'vendor-prism';
+          }
+
+          if (id.includes('/@xterm/') || id.includes('/xterm/')) {
+            return 'vendor-xterm';
+          }
+
+          if (
+            id.includes('/isomorphic-git/') ||
+            id.includes('/@isomorphic-git/')
+          ) {
+            return 'vendor-git';
+          }
+        },
+      },
+    },
+  },
   test:{
     globals: true,
     environment: "happy-dom",

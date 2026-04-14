@@ -1,6 +1,26 @@
 import { Accordion } from "@src/ui/Accordion";
 import { Heading } from "@src/ui/Heading";
 import { Text } from "@src/ui/Text";
+import { getAsset } from "@src/utils/getAsset";
+
+const checklist = [
+    {
+        title: "Software:",
+        items: [
+            "Node.js (package manager)",
+            "Visual Studio Code (code editor)",
+            "Git (version control system)",
+        ]
+    },
+    {
+        title: "Tools",
+        items: [
+            "JavaScript (programming language)",
+            "GitHub (online code repository)",
+            "Terminal (command line interface)",
+        ]
+    }
+]
 
 const sections = {
     installation: {
@@ -53,6 +73,23 @@ const sections = {
     commonErrors: {
         title: "Common Errors",
         id: "common-errors",
+        content: [
+            {
+                title: "Node/npm not recognized",
+                info: "Consult Chester on the error",
+                moreInfo: "Try restarting your terminal or computer first. If that doesn’t work, you may need to add Node.js to your system PATH manually. You can search online for instructions on how to do this for your operating system.",
+            },
+            {
+                title: "Jest not found",
+                info: "Have you run npm install?",
+                moreInfo: "Make sure you have changed directory into the same level that the package.json file is in before running npm install. If you have and it’s still not working, try deleting node_modules and package-lock.json and running npm install again.",
+            },
+            {
+                title: "Can't find script",
+                info: "Make sure you are running the command in the correct directory",
+                moreInfo: "Some commands need to be run in specific subdirectories. Check the instructions for the command you’re trying to run and make sure you’ve changed into the correct directory using cd [directory name]."
+            }
+        ]
     },
     commands: {
         title: "Commands",
@@ -65,19 +102,40 @@ export default function GettingStarted() {
     return (
         <div className="page-container">
             {/* Getting Started */}
-            <Heading variant="xxl" text="Getting Started" highlight />
+            <Heading variant="xl" text="Getting Started" highlight />
             <Text text="This is the guide to setting up your environment and getting started!" />
             <Text text="Below are buttons so you can skip to the necessary sections." />
-            <div className="grid grid-flow-col auto-cols-fr gap-2 w-full">
+            <ul className="grid grid-flow-col auto-cols-fr gap-2 w-full max-md:grid-flow-row">
                 {Object.values(sections).map(({ title, id }, idx) => {
                     const background = idx % 2 === 0 ? "bg-blue" : "bg-blue-accent";
                     const hoverBackground = idx % 2 === 0 ? "hover:bg-blue-hover" : "hover:bg-blue-accent-hover";
                     return (
-                        <a key={id} href={`#${id}`} className={`${background} ${hoverBackground} px-8 py-2 rounded-full w-full`}>
-                            <button className="text-black-700 cursor-pointer font-bold font-fira text-3xl w-full">
-                                {title}
-                            </button>
-                        </a>
+                        <li className={`${background} ${hoverBackground} px-8 py-2 rounded-full w-full`}>
+                            <a key={id} href={`#${id}`}>
+                                <button className="cursor-pointer font-fira text-3xl w-full">
+                                    <Text text={title} className="text-black-800 font-bold" />
+                                </button>
+                            </a>
+                        </li>
+                    )
+                })}
+            </ul>
+
+            {/* Checklist */}
+            <div className="grid max-md:grid-cols-1 grid-cols-2 rounded-4xl bg-black-800 w-full gap-4">
+                {checklist.map(({ title, items }) => {
+                    return (
+                        <div key={title} className="p-6 space-y-2">
+                            <Heading variant="md" font="fira" className="font-medium" text={title} highlight />
+                            <ul className="space-y-2">
+                                {items.map(item => (
+                                    <li key={item} className="flex items-center justify-start space-x-2">
+                                        <img className="h-8.5 block" src={getAsset('bluetick.svg')} />
+                                        <Text text={item} className="text-left ml-2" />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     )
                 })}
             </div>
@@ -92,12 +150,13 @@ export default function GettingStarted() {
                                 as="h2"
                                 noWrapper
                                 font="fira"
-                                className="flex relative items-center justify-center w-full text-4xl font-fira mb-4"
+                                variant='md'
+                                className="flex relative items-center justify-center w-full font-fira mb-4"
                             >
-                                <span className="text-4xl text-orange absolute left-0 translate-x-1/2">{idx + 1}.</span>{' '}
-                                <span className="text-2xl">{title}</span>
+                                <span className="text-3xl text-orange absolute left-0 translate-x-1/2">{idx + 1}.</span>{' '}
+                                <span>{title}</span>
                             </Heading>
-                            <Text variant="sm" text={info} />
+                            <Text variant="sm" text={info} className="px-8" />
                             <div className="px-8 w-full">
                                 <Accordion title="More info" titleClass="ml-auto" contentClass=" text-center">
                                     <Text variant="sm" text={moreInfo} className="text-left mb-4" />
@@ -115,6 +174,26 @@ export default function GettingStarted() {
                 })}
             </div>
 
+            {/* Common Errors */}
+            <div id={sections.commonErrors.id} className="mt-16 p-6 space-y-6 border-orange border-2 justify-items-center w-full bg-black-800 rounded-4xl">
+                <Heading variant="md" noWrapper font="fira" className="font-normal text-center relative w-full max-w-none">
+                    <img className="max-h-8.5 text-orange absolute left-0 " src={getAsset('warning.svg')} alt="!" />{' '}
+                    <span>{sections.commonErrors.title}</span>
+                </Heading>
+                <ul className="w-full space-y-6">
+                    {sections.commonErrors.content.map(({ title, info, moreInfo }) => {
+                        return (
+                            <li key={title} className="border-l-3 px-4 border-orange flex flex-col">
+                                <Heading as='h3' className="font-normal" variant="md" font='fira' text={title} />
+                                <Text variant="sm" text={info} className="ml-0 text-left" />
+                                <Accordion title="More info" titleClass="ml-auto" contentClass="">
+                                    <Text variant="sm" text={moreInfo} className="text-left" />
+                                </Accordion>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </div>
         </div>
     );
 }

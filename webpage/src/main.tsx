@@ -1,10 +1,14 @@
 import "./index.css";
+import { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Link, RouterProvider } from "react-router";
 import { RootLayout, Home, Instructions, GettingStarted } from "@src/pages";
-import CLI from "./CLI";
 import routes from "@src/routes";
 import { BASE_URL, CLI_FEATURE_FLAG } from "./config";
+import { Loader } from "./ui/Loader";
+import { lazyWithMinDelay } from "./utils/lazy";
+
+const CLI = lazyWithMinDelay(() => import("./CLI"), 500);
 
 const basename = BASE_URL === "/" ? undefined : BASE_URL.replace(/\/$/, "");
 
@@ -31,7 +35,20 @@ const router = createBrowserRouter(
           element: <GettingStarted />,
         },
         ...(CLI_FEATURE_FLAG
-          ? [{ path: routes.CLI.path, element: <CLI /> }]
+          ? [
+            {
+              path: routes.CLI.path,
+              element: (
+                <Suspense
+                  fallback={
+                    <Loader />
+                  }
+                >
+                  <CLI />
+                </Suspense>
+              ),
+            },
+          ]
           : []),
         {
           path: "*",

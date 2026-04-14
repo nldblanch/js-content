@@ -9,7 +9,7 @@ const RootLayout = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <AppHeader />
-            <main className="bg-black-700 grow">
+            <main className="bg-black-700 grow flex flex-col min-h-0">
                 <ScrollToTop />
                 <Outlet />
             </main>

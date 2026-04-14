@@ -1,8 +1,6 @@
-const baseClass = "text-gray font-normal px-8 font-fira mx-auto text-center";
+import { twMerge } from "tailwind-merge";
 
-const clsx = (...classes: (string | undefined)[]) => {
-    return classes.filter(Boolean).join(' ');
-}
+const baseClass = "text-gray font-normal font-fira mx-auto text-center";
 
 const variantStyles = {
     xl: 'text-[27px] leading-[30px]',
@@ -19,7 +17,7 @@ interface Props {
 }
 export const Text = ({ text, variant = "md", className }: Props) => {
     return (
-        <p className={clsx(baseClass, variantStyles[variant], className)}>
+        <p className={twMerge(baseClass, variantStyles[variant], className)}>
             {text}
         </p>
     )

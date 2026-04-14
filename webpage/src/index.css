@@ -3,6 +3,7 @@
 
  html {
 	scroll-behavior: smooth;
+	@apply bg-black-700;
  }
  @theme {
  	--font-mono: "M PLUS 1 Code", monospace;
