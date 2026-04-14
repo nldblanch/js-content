@@ -1,18 +1,24 @@
-interface Props {
-    text: string
-    variant?: "primary" | "small"
+const baseClass = "text-gray font-normal px-8 font-fira mx-auto text-center";
+
+const clsx = (...classes: (string | undefined)[]) => {
+    return classes.filter(Boolean).join(' ');
 }
 
-export const Text = ({ text, variant = "primary" }: Props) => {
-    if (variant === "small") {
-        return (
-            <p className="text-gray text-lg font-normal px-8 font-fira mx-auto text-center">
-                {text}
-            </p>
-        )
-    }
+const variantStyles = {
+    normal: "text-3xl",
+    sm: "text-lg",
+    xs: "text-sm"
+}
+type Variant = keyof typeof variantStyles;
+
+interface Props {
+    text: string
+    variant?: Variant
+    className?: string
+}
+export const Text = ({ text, variant = "normal", className }: Props) => {
     return (
-        <p className="text-gray text-3xl font-normal px-8 font-fira mx-auto text-center">
+        <p className={clsx(baseClass, variantStyles[variant], className)}>
             {text}
         </p>
     )
