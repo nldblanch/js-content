@@ -65,7 +65,7 @@ export default function GettingStarted() {
     return (
         <div className="page-container">
             {/* Getting Started */}
-            <Heading text="Getting Started" highlight />
+            <Heading variant="xxl" text="Getting Started" highlight />
             <Text text="This is the guide to setting up your environment and getting started!" />
             <Text text="Below are buttons so you can skip to the necessary sections." />
             <div className="grid grid-flow-col auto-cols-fr gap-2 w-full">
@@ -84,22 +84,27 @@ export default function GettingStarted() {
 
             {/* Installation */}
             <div id={sections.installation.id} className="mt-16 justify-items-center space-y-6 w-full">
-                <Heading text={sections.installation.title} />
+                <Heading variant="xl" text={sections.installation.title} />
                 {sections.installation.content.map(({ title, info, moreInfo, instructions }, idx) => {
                     return (
                         <section key={title} className="bg-black-800 rounded-lg w-full text-white justify-center items-center flex flex-col py-4">
-                            <h2 className="flex relative items-center justify-center w-full text-4xl font-fira mb-4">
+                            <Heading
+                                as="h2"
+                                noWrapper
+                                font="fira"
+                                className="flex relative items-center justify-center w-full text-4xl font-fira mb-4"
+                            >
                                 <span className="text-4xl text-orange absolute left-0 translate-x-1/2">{idx + 1}.</span>{' '}
                                 <span className="text-2xl">{title}</span>
-                            </h2>
+                            </Heading>
                             <Text variant="sm" text={info} />
                             <div className="px-8 w-full">
                                 <Accordion title="More info" titleClass="ml-auto" contentClass=" text-center">
-                                    <Text variant="xs" text={moreInfo} className="text-left mb-4" />
+                                    <Text variant="sm" text={moreInfo} className="text-left mb-4" />
                                     <ul>
                                         {instructions?.map((instruction, idx) => (
                                             <li key={idx}>
-                                                <Text variant="xs" text={instruction} className="text-left" />
+                                                <Text variant="sm" text={instruction} className="text-left" />
                                             </li>
                                         ))}
                                     </ul>
