@@ -51,7 +51,7 @@ export default function Home() {
                                 className="text-[#ce9178] border-none outline-none"
                                 value={value}
                                 id="auto"
-                                style={{ width: `${Math.max(value.length, 1)}ch` }}
+                                style={{ width: `${Math.max(value.length, 1)}ch`, fontFamily: "inherit" }}
                                 onChange={(e) => {
                                     setValue(e.currentTarget.value);
                                 }}
