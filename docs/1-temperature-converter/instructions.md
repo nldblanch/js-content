@@ -21,14 +21,7 @@ Then return your value:
 return fahrenheit;
 ```
 
-### Solution
-
-```javascript
-function celsiusToFahrenheit(celsius) {
-    const fahrenheit = celsius * (9 / 5) + 32;
-    return fahrenheit;
-}
-```
+See [solution.md](solution.md) for the completed answer to this function.
 
 ## Function 2: Convert to Celsius
 
@@ -44,14 +37,7 @@ Then return your value:
 return celsius;
 ```
 
-### Solution
-
-```javascript
-function fahrenheitToCelsius(fahrenheit) {
-    const celsius = (fahrenheit - 32) * (5 / 9);
-    return celsius;
-}
-```
+See [solution.md](solution.md) for the completed answer to this function.
 
 ## Function 3: Display temperature
 
@@ -121,27 +107,11 @@ If we receive anything else as our option, we should return a string informing t
 return 'Invalid temperature option provided.'
 ```
 
-### Solution
+See [solution.md](solution.md) for the completed answer to this function.
 
-<details>
-<summary>Reveal</summary>
+## Completed Solutions
 
-```javascript
-function displayTemperature(temperature, option) {
-    if (option === 'celsius') {
-        const fahrenheit = celsiusToFahrenheit(temperature);
-        return `The temperature is ${Math.floor(temperature)} degrees celsius, ${Math.floor(fahrenheit)} degrees fahrenheit.`;
-    } else if (option === 'fahrenheit') {
-        const celsius = fahrenheitToCelsius(temperature);
-        return `The temperature is ${Math.floor(celsius)} degrees celsius, ${Math.floor(temperature)} degrees fahrenheit.`;
-    } else {
-        return 'Invalid temperature option provided.'
-    }
-}
-```
-
-</details>
-<br>
+The worked answers for all three functions are in [solution.md](solution.md).
 
 ## Key Concepts to Remember
 

@@ -126,10 +126,14 @@ describe('InstructionsPage', () => {
     const user = userEvent.setup();
 
     expect(screen.getByTestId('markdown')).toHaveTextContent('README1');
-    expect(screen.getByRole('button', { name: 'Prev' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Next' })).not.toBeDisabled();
 
-    await user.click(screen.getByRole('button', { name: 'Next' }));
+    const prevButtons = screen.getAllByRole('button', { name: 'Previous' });
+    const nextButtons = screen.getAllByRole('button', { name: 'Next' });
+
+    expect(prevButtons[0]).toBeDisabled();
+    expect(nextButtons[0]).not.toBeDisabled();
+
+    await user.click(nextButtons[0]);
     expect(screen.getByTestId('markdown')).toHaveTextContent('README2');
   });
 });

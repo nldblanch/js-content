@@ -48,7 +48,7 @@ const CreateRepoForm = ({ onSubmit }: CreateRepoFormProps) => {
 
   return (
     <div className="bg-[#0d1117] min-h-full text-[#c9d1d9] font-sans">
-      <div className="max-w-[820px] mx-auto py-10 px-4 md:px-8">
+      <div className="max-w-205 mx-auto py-10 px-4 md:px-8">
         {/* Header Section */}
         <header className="border-b border-[#30363d] pb-4 mb-8">
           <h1 className="text-2xl font-semibold text-[#f0f6fc]">Create a new repository</h1>

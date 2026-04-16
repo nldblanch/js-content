@@ -80,18 +80,18 @@ function BrowserFrame({ children }: { children: React.ReactNode }) {
             return (
               <button
                 key={index}
+                type="button"
                 onClick={handleTabClick(index)}
                 className={`
                   group flex items-center gap-2 px-4 py-2 text-xs rounded-t-lg cursor-pointer transition-colors shrink-0
-                  ${
-                    isActive
-                      ? 'bg-slate-900 text-slate-300 border-t border-x border-slate-700'
-                      : 'text-slate-500 hover:bg-slate-700/50'
+                  ${isActive
+                    ? 'bg-slate-900 text-slate-300 border-t border-x border-slate-700'
+                    : 'text-slate-500 hover:bg-slate-700/50'
                   }
                 `}
               >
                 {isActive && <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />}
-                <span className="truncate max-w-[140px]">{title}</span>
+                <span className="truncate max-w-35">{title}</span>
               </button>
             );
           })}
