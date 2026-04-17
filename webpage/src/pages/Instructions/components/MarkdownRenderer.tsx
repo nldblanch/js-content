@@ -160,6 +160,11 @@ export function MarkdownRenderer({
               {children}
             </blockquote>
           ),
+          details: ({ children, ...props }) => (
+            <details {...props} className="cursor-pointer">
+              {children}
+            </details>
+          ),
           ul: ({ children, ...props }) => (
             <ul
               {...props}
@@ -185,12 +190,12 @@ export function MarkdownRenderer({
             <hr {...props} className="border-gray/20 my-8" />
           ),
           strong: ({ children, ...props }) => (
-            <strong {...props} className="text-white font-semibold">
+            <strong {...props} className="font-semibold">
               {children}
             </strong>
           ),
           summary: ({ children, ...props }) => (
-            <summary {...props} className="cursor-pointer">
+            <summary {...props} className="cursor-pointer text-gray">
               {children}
             </summary>
           ),
