@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
 import { MemoryRouter } from "react-router";
 import { Navigation } from "./Navigation";
-import routes from "../../routes";
+import routes from "@src/routes";
 
 const mocks = vi.hoisted(() => ({
     useChallengeInstructionsMock: vi.fn(),

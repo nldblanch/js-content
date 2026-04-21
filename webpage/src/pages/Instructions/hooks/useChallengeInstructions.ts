@@ -55,7 +55,7 @@ type GlobModules = Record<string, string>;
 
 export const challengeDocsGlobber = {
     glob(): GlobModules {
-        return import.meta.glob<string>("../../../../docs/*/**/*.md", {
+        return import.meta.glob<string>("../../../../../docs/*/**/*.md", {
             query: "?raw",
             import: "default",
             eager: true,

@@ -1,18 +1,20 @@
 import { Link, useLocation } from "react-router";
-import routes from "../../routes";
-import { getAsset } from "../../utils/getAsset";
-import { CLI_FEATURE_FLAG } from "../../config";
-import { WindowControlButtons } from "../../ui/WindowControlButtons"
+import routes from "@src/routes";
+import { getAsset } from "@src/utils/getAsset";
+import { CLI_FEATURE_FLAG } from "@src/config";
+import { WindowControlButtons } from "@src/ui/WindowControlButtons"
+import { Heading } from "@src/ui/Heading";
+import { Text } from "@src/ui/Text";
 
 const Banner = () => {
 
     return (
         <div className="w-full bg-black-700 flex justify-between items-center px-4 py-2">
             <WindowControlButtons />
-            <h1 className="text-5xl font-mono font-semibold text-gray">JavaScript Content</h1>
+            <Heading className="font-mono font-semibold text-gray" text="JavaScript Content" />
             <div className="flex gap-4 justify-between">
-                <img src={getAsset("sunshine.svg")} className="h-8 aspect-square" alt="Theme" />
-                <img src={getAsset("help.svg")} className="h-8 aspect-square" alt="Help" />
+                <img src={getAsset("sunshine.svg")} className="h-6 aspect-square" alt="Theme" />
+                <img src={getAsset("help.svg")} className="h-6 aspect-square" alt="Help" />
             </div>
         </div>
     )
@@ -38,7 +40,7 @@ const NavBar = () => {
                 to={path}
                 className={`text-gray text-center text-md block py-2 px-4 hover:bg-black-900 cursor-pointer text-2xl ${activeTab === path.split("/")[1] ? "bg-black-900" : ""}`}
               >
-                {label}
+                <Text text={label} />
               </Link>
             </li>
           );
