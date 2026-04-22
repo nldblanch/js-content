@@ -4,8 +4,10 @@ import React, {
   cloneElement,
   type ReactNode,
 } from "react";
+import MarkdownSummary from "./MarkdownSummary";
 import { Modal, useModal } from "./Modal";
-import { MarkdownSummary, extractText } from "./MarkdownRenderer"; // Import the component
+import {  extractText } from "./MarkdownRenderer"; // Import the component
+
 
 // The component that the `MarkdownRenderer` component
 // will use for rendering <details> elements. The purpose
@@ -22,6 +24,15 @@ export function CustomDetails({ children }: { children: ReactNode }) {
 
   const childrenArray = React.Children.toArray(children);
 
+  // Searching through the 'children' of this 'CustomDetails' 
+  // component, separate the 'MarkdownSummary' component from all 
+  // the other components, with all the other components stored simply
+  //  in 'content'. The reason is that the 'content' will only be shown
+  //  when the user has selected the 'accept' button on the modal, ie,
+  //  when the <details> element has expanded. In contrast, the 
+  // 'MarkdownSummary' component will be rendered regardless; this 
+  // gives the user something to click on so that the modal asking 
+  // for their conformation can be rendered.
   const summaryElement = childrenArray.find(
     (child) => isValidElement(child) && child.type === MarkdownSummary,
   ) as React.ReactElement | undefined;
@@ -30,6 +41,10 @@ export function CustomDetails({ children }: { children: ReactNode }) {
     (child) => !(isValidElement(child) && child.type === MarkdownSummary),
   );
 
+  // On click event handler for when user clicks on <details> element.
+  //  The intention here is to render a modal in this event handler, 
+  // so that a modal asking for the user's confirmation is shown whenever
+  //  they click to expand the <details> element.
   const handleToggle = (e: React.MouseEvent) => {
     const summaryText = extractText(summaryElement).toLowerCase();
 
@@ -38,6 +53,10 @@ export function CustomDetails({ children }: { children: ReactNode }) {
     // expanding the table of contents, there does
     // not need to be a modal confirming the user's action.
     if (summaryText.includes("table of contents")) {
+      // The state is revered from its current value;
+      //  this enables the <details> component to behave as 
+      // it normally would without the modal: click on a closed 
+      // <details> to expand it; click on an open <details> to close it.
       setIsExpanded((prev) => !prev);
       return;
     }
@@ -51,6 +70,11 @@ export function CustomDetails({ children }: { children: ReactNode }) {
     }
   };
 
+  // On click handler for when the user pressed the 'accept' button in the modal.
+  // Will close the modal and set the 'expanded' state to true; this
+  //  component will then automatically respond to the true value of
+  //  the 'expanded' state: the information belonging to the <details>
+  //  element will be revealed.
   const handleConfirm = () => {
     setIsExpanded(true);
     close();
@@ -61,6 +85,17 @@ export function CustomDetails({ children }: { children: ReactNode }) {
       <div onClick={handleToggle} className="cursor-pointer">
         {summaryElement ? (
           // Clone the summary and inject the isExpanded state
+          // Remember that the 'isExpanded' state will be set 
+          // to true only if the user selects 'confirm' on the 
+          // modal that appears. If this state set to true, the 
+          // 'customDetails' component will respond by rendering
+          //  the full contents of the <details> component, and
+          //  the 'SummaryDetails' component will respond too,
+          //  changing its UI to reflect the expanded contents;
+          //  this is the reason why the 'SummaryDetails' component
+          //  is being cloned: so that it can always be rendered with
+          //  the up to date 'isExpanded' state, rendering the appropriate
+          //  UI based on this state.
           cloneElement(summaryElement, { isOpen: isExpanded } as any)
         ) : (
           <div className="p-4 text-blue font-fira text-xl">Details</div>

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { CustomDetails } from "./CustomDetails";
-import { MarkdownSummary } from "./MarkdownRenderer";
+import MarkdownSummary from "./MarkdownSummary";
 
 describe("CustomDetails Component", () => {
   const renderDetails = (summaryText: string, contentText: string) => {

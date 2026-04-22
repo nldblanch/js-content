@@ -22,6 +22,20 @@ type ModalProps = {
 /**
  * Modal component. Combined with above 'useModal' custom hook,
   is designed to be reusable throughout application.
+
+  See the 'CustomDetails' component for a current use of this 
+  modal component; there the modal is used when the user clicks
+   to expand a HTML <details> component (for example, they are 
+   selecting to view a hint from the instructions). Because of 
+   the way this 'Modal' component is designed, the 'CustomDetails'
+  component renders this 'Modal' component as a child component,
+  passing in custom contents to this 'Modal' component, with this
+  content rendered as the 'children' of the 'Modal' component.
+  For example, the 'CustomDetails' component renders an accept 
+  button for this 'Modal' component. Custom logic added to the 
+  'accept' button in the 'CustomDetails' component means that 
+  clicking on this button will perform the expected behaviour: 
+  the custom information in '<details>' will be revealed.
  */
 export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -49,7 +63,8 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             onClick={onClose}
             className="cursor-pointer text-gray hover:text-white transition-colors text-3xl leading-none"
           >
-            {/* closing symbol: X */}
+            {/* closing symbol: X. Such a closing symbol appears at the top
+            right of the modal. */}
             &times;
           </button>
         </div>

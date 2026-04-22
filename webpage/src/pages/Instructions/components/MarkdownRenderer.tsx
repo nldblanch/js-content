@@ -4,24 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { slugify } from "../utils/slugify";
-
-// The component that the `MarkdownRenderer` component
-// will use for rendering <summary> elements.
-export const MarkdownSummary = ({ children, isOpen, ...props }: any) => (
-  <summary
-    {...props}
-    className="p-4 text-gray font-fira text-xl font-bold hover:bg-white/5 transition-colors list-none flex items-center gap-4"
-  >
-    {/* Rotate the symbol based on the isOpen prop */}
-    <span
-      className={`transition-transform duration-200 inline-block ${isOpen ? "rotate-90" : "rotate-0"}`}
-      aria-hidden="true"
-    >
-      ▶
-    </span>
-    {children}
-  </summary>
-);
+import MarkdownSummary from "./MarkdownSummary";
 
 type Props = {
   markdown: string;
