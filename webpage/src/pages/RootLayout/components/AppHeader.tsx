@@ -7,21 +7,30 @@ import { Heading } from "@src/ui/Heading";
 import { Text } from "@src/ui/Text";
 
 const Banner = () => {
-
-    return (
-        <div className="w-full bg-black-700 flex justify-between items-center px-4 py-2">
-            <WindowControlButtons />
-            <Heading className="font-mono font-semibold text-gray" text="JavaScript Content" />
-            <div className="flex gap-4 justify-between">
-                <img src={getAsset("sunshine.svg")} className="h-6 aspect-square" alt="Theme" />
-                <img src={getAsset("help.svg")} className="h-6 aspect-square" alt="Help" />
-            </div>
-        </div>
-    )
-}
+  return (
+    <div className="w-full bg-black-700 flex justify-between items-center px-4 py-2">
+      <WindowControlButtons />
+      <Heading className="font-mono font-semibold text-gray" text="
+        JavaScript Content
+      " />
+      <div className="flex gap-4 justify-between">
+        <img
+          src={getAsset("sunshine.svg")}
+          className="h-6 aspect-square cursor-pointer"
+          alt="Theme"
+        />
+        <img
+          src={getAsset("help.svg")}
+          className="h-6 aspect-square cursor-pointer"
+          alt="Help"
+        />
+      </div>
+    </div>
+  );
+};
 
 const NavBar = () => {
-    const activeTab = useLocation().pathname.split("/")[1] || "";
+  const activeTab = useLocation().pathname.split("/")[1] || "";
   return (
     <nav className="w-full bg-black-800">
       <ul className="flex justify-evenly items-center flex-nowrap">
@@ -53,12 +62,12 @@ const NavBar = () => {
 const Breadcrumbs = () => {
   const activeTab = useLocation().pathname.split("/")[1] || "home";
 
-    return (
-        <nav className="bg-black-900 w-full text-white/20 px-4 py-2 text-2xl font-mono">
-            {`src > ${activeTab.split(' ').join('-')}.html`}
-        </nav>
-    )
-}
+  return (
+    <nav className="bg-black-900 w-full text-white/20 px-4 py-2 text-2xl font-mono">
+      {`src > ${activeTab.split(" ").join("-")}.html`}
+    </nav>
+  );
+};
 
 export function AppHeader() {
   return (
