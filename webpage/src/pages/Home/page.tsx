@@ -17,7 +17,7 @@ export default function Home() {
             <Heading variant="xl" text="Making JavaScript Easy" underline highlight />
             <Text text="A comprehensive course designed for beginners to master JavaScript fundamentals through hands-on exercises." />
             <Link to={routes.SETUP.path} className="bg-blue px-8 py-2 rounded-4xl max-h-68 flex items-center justify-center">
-                <button className="text-black-700 font-bold font-fira text-3xl">
+                <button className="cursor-pointer text-black-700 font-bold font-fira text-3xl">
                     Start Learning
                 </button>
                 <div className="p-4">

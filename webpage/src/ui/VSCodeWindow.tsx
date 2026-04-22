@@ -9,6 +9,13 @@ interface Props {
   code: string;
 }
 
+// On click event handler that will be
+//  triggered whenever the user clicks 
+// anywhere on this component. The idea
+//  is that, automatically, a click anywhere
+//  on this component will focus the <input />
+//  element. This <input /> element is passed in
+//  as a child to this component.
 export const VSCodeWindow = ({ children, title, code }: Props) => {
   // Reference to allow clicking the container to focus the input
   const containerRef = useRef<HTMLDivElement>(null);
