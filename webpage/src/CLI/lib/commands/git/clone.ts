@@ -2,7 +2,7 @@ import git from "isomorphic-git";
 import fs from "@CLI/lib/fileSystem.ts";
 import type { CommandContext } from "@CLI/types.ts";
 import { exists, resolvePath, urlToPath } from "../helpers.ts";
-import { mkdir } from "../shell.ts";
+import { mkdir } from "../shell/mkdir.ts";
 import { copyMissingObjects } from "./utils.ts";
 
 /**

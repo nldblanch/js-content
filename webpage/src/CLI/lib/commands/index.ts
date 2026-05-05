@@ -1,6 +1,7 @@
 // Imports
-import * as shell from "./shell";
-import * as git from "./git/index";
+import { shellCommands } from "./shell/index.ts";
+import { debugCommands } from "./debug/index.ts";
+import { main as gitCommand } from "./git/index.ts";
 import type { CommandContext, CommandFn } from "@CLI/types.ts";
 import { useChallengeStore } from "@CLI/store/useChallengeStore.ts";
 
@@ -8,21 +9,14 @@ import { useChallengeStore } from "@CLI/store/useChallengeStore.ts";
  * Register command modules to be accessible within the environment.
  */
 const registry: Record<string, CommandFn> = {
-  // Base Shell Commands
-  ls: shell.ls,
-  pwd: shell.pwd,
-  mkdir: shell.mkdir,
-  touch: shell.touch,
-  cd: shell.cd,
+  ...shellCommands,
+  ...debugCommands,
 
-  // Complex Modules
-  git: git.main, // One entry point for the whole git module
+  // Complex Modules with subcommands
+  git: gitCommand,
 
-  // Help System
+  // Core System
   help: async () => `Available commands: ${Object.keys(registry).join(", ")}`,
-
-  // Debugging
-  clearfs: shell.clearFS,
 };
 
 const COMMANDS_WITH_SUBCOMMANDS = ["git", "npm", "node"];
