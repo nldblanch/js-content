@@ -7,7 +7,7 @@ interface AppStore {
   gitRevision: number;
   bumpRevision: () => void;
   browserUrl: string;
-   setBrowserUrl: (url: string) => void;
+  setBrowserUrl: (url: string) => void;
 }
 
 export const useAppStore = create<AppStore>((set, get) => ({

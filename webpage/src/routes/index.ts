@@ -1,35 +1,35 @@
 const routes = {
   HOME: {
-    label: "Home",
-    path: "/",
+    label: 'Home',
+    path: '/',
   },
   INSTRUCTIONS: {
-    label: "Guides",
-    path: "/instructions",
+    label: 'Guides',
+    path: '/instructions',
   },
   INSTRUCTION_DETAIL: {
-    label: "Guide",
-    path: "/instructions/:slug",
+    label: 'Guide',
+    path: '/instructions/:slug',
   },
   SETUP: {
-    label: "Getting Started",
-    path: "/setup",
+    label: 'Getting Started',
+    path: '/setup',
   },
   EXTRA_TASKS: {
-    label: "Extra Tasks",
-    path: "/extra-tasks",
+    label: 'Extra Tasks',
+    path: '/extra-tasks',
   },
   HELP: {
-    label: "HELP!",
-    path: "/help",
+    label: 'HELP!',
+    path: '/help',
   },
   CREDITS: {
-    label: "Credits",
-    path: "/credits",
+    label: 'Credits',
+    path: '/credits',
   },
   CLI: {
-    label: "CLI Tool",
-    path: "/cli",
+    label: 'CLI Tool',
+    path: '/cli',
   },
 };
 

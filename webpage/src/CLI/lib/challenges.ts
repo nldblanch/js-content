@@ -3,7 +3,7 @@ import git from 'isomorphic-git';
 
 // Define Types
 export interface ChallengeStep {
-  label: string;                // Label explaining step
+  label: string; // Label explaining step
   test: () => Promise<boolean>; // Returns true if complete
 }
 
@@ -38,7 +38,7 @@ async function fileInRemote(repoName: string, fileName: string): Promise<boolean
     const gitdir = `/remote/${repoName}.git`;
     const sha = await git.resolveRef({ fs, gitdir, ref: 'refs/heads/main' });
     const { tree } = await git.readTree({ fs, gitdir, oid: sha });
-    return tree.some(entry => entry.path === fileName);
+    return tree.some((entry) => entry.path === fileName);
   } catch {
     return false;
   }
@@ -48,7 +48,7 @@ async function fileInRemote(repoName: string, fileName: string): Promise<boolean
 async function hasRemote(dir: string, remoteName: string): Promise<boolean> {
   try {
     const remotes = await git.listRemotes({ fs, dir });
-    return remotes.some(r => r.remote === remoteName);
+    return remotes.some((r) => r.remote === remoteName);
   } catch {
     return false;
   }
@@ -76,13 +76,15 @@ export const challenges: Challenge[] = [
       'Use `touch` to create an empty file',
     ],
     steps: [
-      { label: 'Create a "my-project" directory',       test: () => pathExists('/home/user/my-project') },
-      { label: 'Navigate into my-project',               test: async () => {
+      { label: 'Create a "my-project" directory', test: () => pathExists('/home/user/my-project') },
+      {
+        label: 'Navigate into my-project',
+        test: async () => {
           // Can't check if a user has cd'd easily, this step is here just to encourage them to move into the directory.
           return pathExists('/home/user/my-project');
-        }
+        },
       },
-      { label: 'Create a README.md file inside it',     test: () => pathExists('/home/user/my-project/README.md') },
+      { label: 'Create a README.md file inside it', test: () => pathExists('/home/user/my-project/README.md') },
     ],
   },
 
@@ -96,9 +98,9 @@ export const challenges: Challenge[] = [
       'Use `git commit -m "message"` to commit',
     ],
     steps: [
-      { label: 'Initialize a git repo in my-project',    test: () => isGitRepo('/home/user/my-project') },
-      { label: 'Create a README.md file',                test: () => pathExists('/home/user/my-project/README.md') },
-      { label: 'Make your first commit',                  test: () => hasCommits('/home/user/my-project') },
+      { label: 'Initialize a git repo in my-project', test: () => isGitRepo('/home/user/my-project') },
+      { label: 'Create a README.md file', test: () => pathExists('/home/user/my-project/README.md') },
+      { label: 'Make your first commit', test: () => hasCommits('/home/user/my-project') },
     ],
   },
 
@@ -112,9 +114,9 @@ export const challenges: Challenge[] = [
       'Use `git push origin main` to upload your commits',
     ],
     steps: [
-      { label: 'Create a "my-project" repo on GitHub',   test: () => remoteRepoExists('my-project') },
+      { label: 'Create a "my-project" repo on GitHub', test: () => remoteRepoExists('my-project') },
       { label: 'Add "origin" remote to your local repo', test: () => hasRemote('/home/user/my-project', 'origin') },
-      { label: 'Push your commits to GitHub',             test: () => fileInRemote('my-project', 'README.md') },
+      { label: 'Push your commits to GitHub', test: () => fileInRemote('my-project', 'README.md') },
     ],
   },
 
@@ -128,30 +130,35 @@ export const challenges: Challenge[] = [
       'Push with `git push origin main`',
     ],
     steps: [
-      { label: 'Create an app.js file',                   test: () => pathExists('/home/user/my-project/app.js') },
-      { label: 'Commit app.js',                           test: async () => {
+      { label: 'Create an app.js file', test: () => pathExists('/home/user/my-project/app.js') },
+      {
+        label: 'Commit app.js',
+        test: async () => {
           try {
             const log = await git.log({ fs, dir: '/home/user/my-project', depth: 2 });
             return log.length >= 2; // At least 2 commits now
-          } catch { return false; }
-        }
+          } catch {
+            return false;
+          }
+        },
       },
-      { label: 'Push so app.js appears on GitHub',        test: () => fileInRemote('my-project', 'app.js') },
+      { label: 'Push so app.js appears on GitHub', test: () => fileInRemote('my-project', 'app.js') },
     ],
   },
 
   {
     id: 'clone-repo',
     title: 'Challenge 5: Clone a Repository',
-    description: 'Clone your remote repository into a new local directory, just like downloading a project from GitHub.',
+    description:
+      'Clone your remote repository into a new local directory, just like downloading a project from GitHub.',
     hints: [
       'Navigate back to /home/user with `cd ..`',
       'Use `git clone <url> my-clone`',
       'Check the contents with `ls my-clone`',
     ],
     steps: [
-      { label: 'Clone the repo into "my-clone"',          test: () => isGitRepo('/home/user/my-clone') },
-      { label: 'Verify README.md exists in the clone',    test: () => pathExists('/home/user/my-clone/README.md') },
+      { label: 'Clone the repo into "my-clone"', test: () => isGitRepo('/home/user/my-clone') },
+      { label: 'Verify README.md exists in the clone', test: () => pathExists('/home/user/my-clone/README.md') },
     ],
   },
 ];

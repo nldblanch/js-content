@@ -1,5 +1,5 @@
-import git from "isomorphic-git";
-import fs from "@CLI/lib/fileSystem.ts";
+import git from 'isomorphic-git';
+import fs from '@CLI/lib/fileSystem.ts';
 
 export async function rename(dir: string, args: string[]): Promise<string> {
   const oldName = args[1];
@@ -13,7 +13,7 @@ export async function rename(dir: string, args: string[]): Promise<string> {
 
     await git.deleteRemote({ fs, dir, remote: oldName });
     await git.addRemote({ fs, dir, remote: newName, url: existing.url });
-    return "";
+    return '';
   } catch (err: unknown) {
     return `error: ${(err as Error).message}`;
   }

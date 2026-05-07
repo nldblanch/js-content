@@ -1,9 +1,9 @@
-import git from "isomorphic-git";
-import fs from "@CLI/lib/fileSystem.ts";
-import type { CommandContext } from "@CLI/types.ts";
-import { exists, resolvePath, urlToPath } from "../helpers.ts";
-import { mkdir } from "../shell.ts";
-import { copyMissingObjects } from "./utils.ts";
+import git from 'isomorphic-git';
+import fs from '@CLI/lib/fileSystem.ts';
+import type { CommandContext } from '@CLI/types.ts';
+import { exists, resolvePath, urlToPath } from '../helpers.ts';
+import { mkdir } from '../shell.ts';
+import { copyMissingObjects } from './utils.ts';
 
 /**
  * git clone <url> [<directory>]
@@ -11,19 +11,18 @@ import { copyMissingObjects } from "./utils.ts";
 export async function clone(ctx: CommandContext): Promise<string> {
   const { args } = ctx;
   const userUrl = args[0];
-  if (!userUrl) return "fatal: You must specify a repository to clone.";
+  if (!userUrl) return 'fatal: You must specify a repository to clone.';
 
   const repoName =
     userUrl
-      .split("/")
+      .split('/')
       .pop()
-      ?.replace(/\.git$/, "") ?? "";
+      ?.replace(/\.git$/, '') ?? '';
   const targetDir = args[1] ? resolvePath(args[1]) : resolvePath(repoName);
 
   const bareDir = urlToPath(userUrl);
-  if (!bareDir) return "fatal: invalid repository URL";
-  if (!(await exists(fs, bareDir, "dir")))
-    return `fatal: repository '${userUrl}' not found`;
+  if (!bareDir) return 'fatal: invalid repository URL';
+  if (!(await exists(fs, bareDir, 'dir'))) return `fatal: repository '${userUrl}' not found`;
 
   try {
     await mkdir({
@@ -33,14 +32,14 @@ export async function clone(ctx: CommandContext): Promise<string> {
       subcmd: null,
     });
     await git.init({ fs, dir: targetDir });
-    await git.addRemote({ fs, dir: targetDir, remote: "origin", url: userUrl });
+    await git.addRemote({ fs, dir: targetDir, remote: 'origin', url: userUrl });
 
     let remoteSha: string;
     try {
       remoteSha = await git.resolveRef({
         fs,
         gitdir: bareDir,
-        ref: "refs/heads/main",
+        ref: 'refs/heads/main',
       });
     } catch {
       return `Cloning into '${repoName}'...\nwarning: remote HEAD refers to nonexistent ref, unable to checkout.`;
@@ -50,19 +49,19 @@ export async function clone(ctx: CommandContext): Promise<string> {
     await git.writeRef({
       fs,
       dir: targetDir,
-      ref: "refs/heads/main",
+      ref: 'refs/heads/main',
       value: remoteSha,
       force: true,
     });
     await git.writeRef({
       fs,
       dir: targetDir,
-      ref: "HEAD",
-      value: "refs/heads/main",
+      ref: 'HEAD',
+      value: 'refs/heads/main',
       force: true,
       symbolic: true,
     });
-    await git.checkout({ fs, dir: targetDir, ref: "main", force: true });
+    await git.checkout({ fs, dir: targetDir, ref: 'main', force: true });
 
     return `Cloning into '${repoName}'... done.`;
   } catch (err: unknown) {
