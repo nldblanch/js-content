@@ -62,8 +62,11 @@ const CreateRepoForm = ({ onSubmit }: CreateRepoFormProps) => {
         <form action={submitAction} className="space-y-6">
           <div className="flex flex-col md:flex-row items-start md:items-end gap-2">
             <div>
-              <label className="block font-semibold mb-2 text-[#f0f6fc]">Owner *</label>
+              <label htmlFor="owner-button" className="block font-semibold mb-2 text-[#f0f6fc]">
+                Owner *
+              </label>
               <button
+                id="owner-button"
                 type="button"
                 className="flex items-center gap-2 bg-[#21262d] border border-[#30363d] px-3 py-1.5 rounded-md text-sm font-medium hover:bg-[#30363d]"
               >

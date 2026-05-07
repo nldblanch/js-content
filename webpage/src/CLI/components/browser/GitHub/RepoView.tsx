@@ -106,13 +106,19 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div className="flex items-center gap-2 text-xl">
           <Book size={18} className="text-[#8b949e]" />
-          <span className="text-[#58a6ff] hover:underline cursor-pointer" onClick={onNavigateToIndex}>
+          <button
+            className="text-[#58a6ff] hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
+            onClick={onNavigateToIndex}
+          >
             user
-          </span>
+          </button>
           <span className="text-[#8b949e]">/</span>
-          <span className="font-semibold text-[#58a6ff] hover:underline cursor-pointer" onClick={handleNavigateToRoot}>
+          <button
+            className="font-semibold text-[#58a6ff] hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
+            onClick={handleNavigateToRoot}
+          >
             {repoName}
-          </span>
+          </button>
           <span className="px-2 py-0.5 text-xs border border-[#30363d] rounded-full text-[#8b949e]">Public</span>
         </div>
 
@@ -217,19 +223,31 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
 };
 
 // Sub Component Helpers
-const FileRow = ({ icon, name, message, time, onClick }: FileRowProps) => (
-  <div
-    onClick={onClick}
-    className="flex items-center justify-between p-3 hover:bg-[#161b22] text-sm transition-colors cursor-pointer group"
-  >
-    <div className="flex items-center gap-3 w-1/3">
-      {icon}
-      <span className="text-[#f0f6fc] group-hover:text-[#58a6ff] group-hover:underline truncate">{name}</span>
+const FileRow = ({ icon, name, message, time, onClick }: FileRowProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      className="flex items-center justify-between p-3 hover:bg-[#161b22] text-sm transition-colors cursor-pointer group focus:outline-none focus:bg-[#161b22]"
+    >
+      <div className="flex items-center gap-3 w-1/3">
+        {icon}
+        <span className="text-[#f0f6fc] group-hover:text-[#58a6ff] group-hover:underline truncate">{name}</span>
+      </div>
+      <div className="text-[#8b949e] flex-1 truncate px-4">{message}</div>
+      <div className="text-[#8b949e] text-right whitespace-nowrap">{time}</div>
     </div>
-    <div className="text-[#8b949e] flex-1 truncate px-4">{message}</div>
-    <div className="text-[#8b949e] text-right whitespace-nowrap">{time}</div>
-  </div>
-);
+  );
+};
 
 const RepoActionButton = ({ icon, label, count }: RepoActionButtonProps) => (
   <div className="flex items-center border border-[#30363d] rounded-md overflow-hidden text-xs font-semibold shadow-sm">
@@ -239,5 +257,4 @@ const RepoActionButton = ({ icon, label, count }: RepoActionButtonProps) => (
     <span className="bg-[#161b22] px-3 py-1.5 text-[#8b949e]">{count}</span>
   </div>
 );
-
 export default GithubRepo;

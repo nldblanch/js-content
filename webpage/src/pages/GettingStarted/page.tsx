@@ -112,7 +112,7 @@ export default function GettingStarted() {
           const background = idx % 2 === 0 ? 'bg-blue' : 'bg-blue-accent';
           const hoverBackground = idx % 2 === 0 ? 'hover:bg-blue-hover' : 'hover:bg-blue-accent-hover';
           return (
-            <li className={`${background} ${hoverBackground} px-8 py-2 rounded-full w-full`}>
+            <li key={id} className={`${background} ${hoverBackground} px-8 py-2 rounded-full w-full`}>
               <a key={id} href={`#${id}`}>
                 <button className="cursor-pointer font-fira text-3xl w-full">
                   <Text text={title} className="text-black-800 font-bold" />
@@ -132,7 +132,7 @@ export default function GettingStarted() {
               <ul className="space-y-2">
                 {items.map((item) => (
                   <li key={item} className="flex items-center justify-start space-x-2">
-                    <img className="h-8.5 block" src={getAsset('bluetick.svg')} />
+                    <img className="h-8.5 block" alt="blue tick icon" src={getAsset('bluetick.svg')} />
                     <Text text={item} className="text-left ml-2" />
                   </li>
                 ))}

@@ -18,7 +18,7 @@ export default function Home() {
       <Link to={routes.SETUP.path} className="bg-blue px-8 py-2 rounded-4xl max-h-68 flex items-center justify-center">
         <button className="text-black-700 font-bold font-fira text-3xl">Start Learning</button>
         <div className="p-4">
-          <img src={getAsset('arrow.svg')} className="inline-block h-8 text-black-700" />
+          <img src={getAsset('arrow.svg')} alt="arrow icon" className="inline-block h-8 text-black-700" />
         </div>
       </Link>
 
@@ -64,7 +64,7 @@ export default function Home() {
               <span className="text-[#ce9178]">{'"'}</span>
               <span>{');'}</span>
             </form>
-            {showTip && <span className="text-[#6a9955] font-fira">// Check the console!</span>}
+            {showTip && <span className="text-[#6a9955] font-fira">{'// Check the console!'}</span>}
           </div>
         </VSCodeWindow>
       </div>
@@ -78,7 +78,7 @@ export default function Home() {
         {['Variables and Data Types', 'Functions', 'Problem Solving', 'Unit Testing', 'Modern JavaScript'].map(
           (topic) => (
             <li className="w-full bg-black-900 rounded-4xl px-6 py-8 space-x-6" key={topic}>
-              <img src={getAsset('tick.svg')} className="inline-block h-12" />
+              <img src={getAsset('tick.svg')} alt="tick icon" className="inline-block h-12" />
               <span>{topic}</span>
             </li>
           ),

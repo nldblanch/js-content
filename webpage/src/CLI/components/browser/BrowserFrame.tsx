@@ -78,7 +78,7 @@ function BrowserFrame({ children }: { children: React.ReactNode }) {
             const title = getTabTitle(child as React.ReactElement, index);
 
             return (
-              <div
+              <button
                 key={index}
                 onClick={handleTabClick(index)}
                 className={`
@@ -92,7 +92,7 @@ function BrowserFrame({ children }: { children: React.ReactNode }) {
               >
                 {isActive && <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />}
                 <span className="truncate max-w-[140px]">{title}</span>
-              </div>
+              </button>
             );
           })}
         </div>
