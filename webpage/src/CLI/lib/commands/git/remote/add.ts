@@ -1,6 +1,6 @@
-import git from "isomorphic-git";
-import fs from "@CLI/lib/fileSystem.ts";
-import { urlToPath } from "@CLI/lib/commands/helpers.ts";
+import git from 'isomorphic-git';
+import fs from '@CLI/lib/fileSystem.ts';
+import { urlToPath } from '@CLI/lib/commands/helpers.ts';
 
 export async function add(dir: string, args: string[]): Promise<string> {
   const remoteName = args[1];
@@ -10,18 +10,16 @@ export async function add(dir: string, args: string[]): Promise<string> {
 
   if (urlToPath(remoteUrl) === null) {
     return (
-      `error: invalid remote URL '${remoteUrl}'\n` +
-      `Hint: URLs should look like https://github.com/user/repo.git`
+      `error: invalid remote URL '${remoteUrl}'\n` + `Hint: URLs should look like https://github.com/user/repo.git`
     );
   }
 
   try {
     await git.addRemote({ fs, dir, remote: remoteName, url: remoteUrl });
-    return "";
+    return '';
   } catch (err: unknown) {
-    const msg = (err as Error).message ?? "";
-    if (msg.includes("already exists"))
-      return `error: remote ${remoteName} already exists.`;
+    const msg = (err as Error).message ?? '';
+    if (msg.includes('already exists')) return `error: remote ${remoteName} already exists.`;
     return `error: ${msg}`;
   }
 }

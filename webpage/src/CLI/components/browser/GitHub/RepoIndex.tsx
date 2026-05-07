@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { BookMarked, Star, Circle, Clock, Search, Plus } from "lucide-react";
-import { fetchRemoteRepos } from "@CLI/lib/repo";
-import { useAppStore } from "@CLI/store/useAppStore";
+import React, { useEffect, useState, useCallback } from 'react';
+import { BookMarked, Star, Circle, Clock, Search, Plus } from 'lucide-react';
+import { fetchRemoteRepos } from '@CLI/lib/repo';
+import { useAppStore } from '@CLI/store/useAppStore';
 
 interface RepoIndexProps {
   onSelectRepo: (repoDir: string) => void;
@@ -14,7 +14,7 @@ const RepoIndex: React.FC<RepoIndexProps> = ({ onSelectRepo, onNewRepo }) => {
 
   // Set the browser URL when this page becomes the active tab
   useEffect(() => {
-    useAppStore.getState().setBrowserUrl("https://github.com/user");
+    useAppStore.getState().setBrowserUrl('https://github.com/user');
   }, []);
 
   useEffect(() => {
@@ -35,9 +35,9 @@ const RepoIndex: React.FC<RepoIndexProps> = ({ onSelectRepo, onNewRepo }) => {
   );
 
   const getDisplayName = (path: string) => {
-    const parts = path.split("/");
+    const parts = path.split('/');
     const lastPart = parts[parts.length - 1];
-    return lastPart.replace(".git", "");
+    return lastPart.replace('.git', '');
   };
 
   return (
@@ -57,9 +57,7 @@ const RepoIndex: React.FC<RepoIndexProps> = ({ onSelectRepo, onNewRepo }) => {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-sm text-[#8b949e] font-medium">
-              {repoPaths.length} results
-            </span>
+            <span className="text-sm text-[#8b949e] font-medium">{repoPaths.length} results</span>
             <button
               onClick={onNewRepo}
               className="flex items-center gap-1.5 bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1.5 rounded-md text-sm font-semibold transition-colors shadow-sm cursor-pointer"
@@ -79,10 +77,7 @@ const RepoIndex: React.FC<RepoIndexProps> = ({ onSelectRepo, onNewRepo }) => {
             </div>
           ) : (
             repoPaths.map((path) => (
-              <div
-                key={path}
-                className="py-6 flex justify-between items-start transition-colors duration-150"
-              >
+              <div key={path} className="py-6 flex justify-between items-start transition-colors duration-150">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <BookMarked className="h-4 w-4 text-[#8b949e]" />
@@ -98,7 +93,7 @@ const RepoIndex: React.FC<RepoIndexProps> = ({ onSelectRepo, onNewRepo }) => {
                   </div>
 
                   <p className="text-[14px] text-[#8b949e] max-w-2xl mt-1 mb-3">
-                    Source files located at{" "}
+                    Source files located at{' '}
                     <span className="font-mono text-xs bg-[#161b22] px-1.5 py-0.5 rounded border border-[#30363d]">
                       {path}
                     </span>
@@ -135,9 +130,7 @@ const RepoIndex: React.FC<RepoIndexProps> = ({ onSelectRepo, onNewRepo }) => {
           {repoPaths.length === 0 && (
             <div className="py-24 flex flex-col items-center justify-center text-[#8b949e] border-2 border-dashed border-[#30363d] rounded-lg mt-4">
               <BookMarked className="h-10 w-10 mb-2 opacity-20" />
-              <p className="text-lg font-medium text-[#f0f6fc]">
-                No repositories found
-              </p>
+              <p className="text-lg font-medium text-[#f0f6fc]">No repositories found</p>
               <p className="text-sm">Create a new repository to get started.</p>
             </div>
           )}

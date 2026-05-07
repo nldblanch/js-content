@@ -1,7 +1,7 @@
 import FS from '@isomorphic-git/lightning-fs';
 
 // Create a new filesystem (or reopen if it already exists)
-const fs = new FS("local-fs");
+const fs = new FS('local-fs');
 
 /**
  * The `fs` instance is a virtual filesystem provided by the `@isomorphic-git/lightning-fs` library.

@@ -2,7 +2,7 @@
 // Although both the 'remote' and 'local' directories share the same FS, we treat them as separate entities.
 // As such, we use a unique Zustand store for both.
 
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface RepoStore {
   repoDir: string | null;

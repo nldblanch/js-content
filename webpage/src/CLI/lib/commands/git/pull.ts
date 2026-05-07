@@ -1,9 +1,9 @@
-import git from "isomorphic-git";
-import fs from "@CLI/lib/fileSystem.ts";
-import { getCwd } from "@CLI/store/useTerminalStore.ts";
-import type { CommandContext } from "@CLI/types.ts";
-import { exists, urlToPath } from "../helpers.ts";
-import { copyMissingObjects } from "./utils.ts";
+import git from 'isomorphic-git';
+import fs from '@CLI/lib/fileSystem.ts';
+import { getCwd } from '@CLI/store/useTerminalStore.ts';
+import type { CommandContext } from '@CLI/types.ts';
+import { exists, urlToPath } from '../helpers.ts';
+import { copyMissingObjects } from './utils.ts';
 
 /**
  * git pull [<remote>] [<branch>]
@@ -11,18 +11,16 @@ import { copyMissingObjects } from "./utils.ts";
 export async function pull(ctx: CommandContext): Promise<string> {
   const { args } = ctx;
   const dir = getCwd();
-  const remoteName = args[0] ?? "origin";
-  const branch = args[1] ?? "main";
+  const remoteName = args[0] ?? 'origin';
+  const branch = args[1] ?? 'main';
 
   try {
     const remotes = await git.listRemotes({ fs, dir });
     const entry = remotes.find((r) => r.remote === remoteName);
-    if (!entry)
-      return `fatal: '${remoteName}' does not appear to be a git repository`;
+    if (!entry) return `fatal: '${remoteName}' does not appear to be a git repository`;
 
     const bareDir = urlToPath(entry.url);
-    if (!bareDir || !(await exists(fs, bareDir, "dir")))
-      return `fatal: repository '${entry.url}' not found`;
+    if (!bareDir || !(await exists(fs, bareDir, 'dir'))) return `fatal: repository '${entry.url}' not found`;
 
     let remoteSha: string;
     try {
@@ -42,7 +40,7 @@ export async function pull(ctx: CommandContext): Promise<string> {
       /* ignore */
     }
 
-    if (localSha === remoteSha) return "Already up to date.";
+    if (localSha === remoteSha) return 'Already up to date.';
 
     await copyMissingObjects(bareDir, `${dir}/.git`, remoteSha);
     await git.writeRef({
@@ -55,14 +53,14 @@ export async function pull(ctx: CommandContext): Promise<string> {
     await git.writeRef({
       fs,
       dir,
-      ref: "HEAD",
+      ref: 'HEAD',
       value: `refs/heads/${branch}`,
       force: true,
       symbolic: true,
     });
     await git.checkout({ fs, dir, ref: branch, force: true });
 
-    const shortLocal = localSha ? localSha.slice(0, 7) : "0000000";
+    const shortLocal = localSha ? localSha.slice(0, 7) : '0000000';
     return `Updating ${shortLocal}..${remoteSha.slice(0, 7)}\nFast-forward`;
   } catch (err: unknown) {
     return `error: ${(err as Error).message}`;

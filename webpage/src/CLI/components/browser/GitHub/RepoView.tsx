@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import { useRepoStore } from "@CLI/store/useRepoStore"; // Subscribe to repo changes
-import { useAppStore } from "@CLI/store/useAppStore"; // Subscribe to gitRevision
-import { getFileTree } from "@CLI/lib/repo"; // Allows navigating the file tree of the repo
+import { useState, useEffect, useCallback } from 'react';
+import { useRepoStore } from '@CLI/store/useRepoStore'; // Subscribe to repo changes
+import { useAppStore } from '@CLI/store/useAppStore'; // Subscribe to gitRevision
+import { getFileTree } from '@CLI/lib/repo'; // Allows navigating the file tree of the repo
 
 import {
   // Lucide Icon Imports
@@ -15,7 +15,7 @@ import {
   Star,
   GitFork,
   Eye,
-} from "lucide-react";
+} from 'lucide-react';
 
 // Define data structs
 interface TreeEntry {
@@ -46,11 +46,9 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
   // Subscribe to Zustand stores — component re-renders when these change
   const repoDir = useRepoStore((state) => state.repoDir); // Current repo directory (e.g. /remote/my-repo.git)
   const gitRevision = useAppStore((state) => state.gitRevision);
-  const repoName = repoDir
-    ? repoDir.split("/").pop()?.replace(".git", "")
-    : "my-cool-repo";
+  const repoName = repoDir ? repoDir.split('/').pop()?.replace('.git', '') : 'my-cool-repo';
 
-  const [currentPath, setCurrentPath] = useState<string>(""); // Current path within repo
+  const [currentPath, setCurrentPath] = useState<string>(''); // Current path within repo
   const [entries, setEntries] = useState<TreeEntry[]>([]); // Files/folders at the current path
   const [loading, setLoading] = useState(true); // Loading state for repo contents
 
@@ -60,7 +58,7 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
       if (!repoDir) return;
       setLoading(true);
       // Hardcoded 'main' for ref, could eventually add branch switching functionality
-      const data = await getFileTree(repoDir, "main", currentPath);
+      const data = await getFileTree(repoDir, 'main', currentPath);
       setEntries(data);
       setLoading(false);
     };
@@ -81,7 +79,7 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
 
   // UseCallback to memoize navigation handlers and prevent unnecessary re-renders
   const handleNavigateToRoot = useCallback(() => {
-    navigateTo("");
+    navigateTo('');
   }, []);
 
   const handleNavigateToPath = useCallback(
@@ -96,7 +94,7 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
       if (entry.isDir) {
         navigateTo(entry.path);
       } else {
-        console.log("Open file:", entry.path);
+        console.log('Open file:', entry.path);
       }
     },
     [],
@@ -108,31 +106,25 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div className="flex items-center gap-2 text-xl">
           <Book size={18} className="text-[#8b949e]" />
-          <span
-            className="text-[#58a6ff] hover:underline cursor-pointer"
+          <button
+            className="text-[#58a6ff] hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
             onClick={onNavigateToIndex}
           >
             user
-          </span>
+          </button>
           <span className="text-[#8b949e]">/</span>
-          <span
-            className="font-semibold text-[#58a6ff] hover:underline cursor-pointer"
+          <button
+            className="font-semibold text-[#58a6ff] hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
             onClick={handleNavigateToRoot}
           >
             {repoName}
-          </span>
-          <span className="px-2 py-0.5 text-xs border border-[#30363d] rounded-full text-[#8b949e]">
-            Public
-          </span>
+          </button>
+          <span className="px-2 py-0.5 text-xs border border-[#30363d] rounded-full text-[#8b949e]">Public</span>
         </div>
 
         <div className="flex gap-2">
           <RepoActionButton icon={<Eye size={16} />} label="Watch" count="1" />
-          <RepoActionButton
-            icon={<GitFork size={16} />}
-            label="Fork"
-            count="0"
-          />
+          <RepoActionButton icon={<GitFork size={16} />} label="Fork" count="0" />
           <RepoActionButton icon={<Star size={16} />} label="Star" count="12" />
         </div>
       </div>
@@ -152,24 +144,18 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
 
       {/* Dynamic Breadcrumbs */}
       <div className="flex items-center gap-2 mb-4 text-sm font-medium">
-        <button
-          onClick={() => navigateTo("")}
-          className="text-[#58a6ff] hover:underline flex items-center gap-1"
-        >
+        <button onClick={() => navigateTo('')} className="text-[#58a6ff] hover:underline flex items-center gap-1">
           {repoName}
         </button>
         {currentPath
-          .split("/")
+          .split('/')
           .filter(Boolean)
           .map((part, i, arr) => {
-            const pathSoFar = arr.slice(0, i + 1).join("/");
+            const pathSoFar = arr.slice(0, i + 1).join('/');
             return (
               <div key={pathSoFar} className="flex items-center gap-2">
                 <span className="text-[#8b949e]">/</span>
-                <button
-                  onClick={handleNavigateToPath(pathSoFar)}
-                  className="text-[#58a6ff] hover:underline"
-                >
+                <button onClick={handleNavigateToPath(pathSoFar)} className="text-[#58a6ff] hover:underline">
                   {part}
                 </button>
               </div>
@@ -196,9 +182,7 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
               UN
             </div>
             <span className="font-semibold text-[#f0f6fc]">User Name</span>
-            <span className="text-[#8b949e] hidden sm:inline truncate max-w-xs">
-              Viewing {currentPath || "root"}
-            </span>
+            <span className="text-[#8b949e] hidden sm:inline truncate max-w-xs">Viewing {currentPath || 'root'}</span>
           </div>
           <div className="flex items-center gap-4">
             {/* Static placeholder values for now */}
@@ -210,34 +194,27 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
         {/* File Rows */}
         <div className="divide-y divide-[#30363d]">
           {loading ? (
-            <div className="p-8 text-center text-[#8b949e] animate-pulse">
-              Loading files...
-            </div>
+            <div className="p-8 text-center text-[#8b949e] animate-pulse">Loading files...</div>
           ) : (
             entries.map((entry) => (
               <FileRow
                 key={entry.path}
                 icon={
                   entry.isDir ? (
-                    <Folder
-                      size={16}
-                      className="text-[#7d8590] fill-[#7d8590]/10"
-                    />
+                    <Folder size={16} className="text-[#7d8590] fill-[#7d8590]/10" />
                   ) : (
                     <FileText size={16} className="text-[#7d8590]" />
                   )
                 }
                 name={entry.name}
-                message={entry.isDir ? "Folder" : "Source File"}
+                message={entry.isDir ? 'Folder' : 'Source File'}
                 time="now"
                 onClick={handleFileClick(entry)}
               />
             ))
           )}
           {!loading && entries.length === 0 && (
-            <div className="p-8 text-center text-[#8b949e]">
-              This directory is empty.
-            </div>
+            <div className="p-8 text-center text-[#8b949e]">This directory is empty.</div>
           )}
         </div>
       </div>
@@ -246,21 +223,31 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
 };
 
 // Sub Component Helpers
-const FileRow = ({ icon, name, message, time, onClick }: FileRowProps) => (
-  <div
-    onClick={onClick}
-    className="flex items-center justify-between p-3 hover:bg-[#161b22] text-sm transition-colors cursor-pointer group"
-  >
-    <div className="flex items-center gap-3 w-1/3">
-      {icon}
-      <span className="text-[#f0f6fc] group-hover:text-[#58a6ff] group-hover:underline truncate">
-        {name}
-      </span>
+const FileRow = ({ icon, name, message, time, onClick }: FileRowProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      className="flex items-center justify-between p-3 hover:bg-[#161b22] text-sm transition-colors cursor-pointer group focus:outline-none focus:bg-[#161b22]"
+    >
+      <div className="flex items-center gap-3 w-1/3">
+        {icon}
+        <span className="text-[#f0f6fc] group-hover:text-[#58a6ff] group-hover:underline truncate">{name}</span>
+      </div>
+      <div className="text-[#8b949e] flex-1 truncate px-4">{message}</div>
+      <div className="text-[#8b949e] text-right whitespace-nowrap">{time}</div>
     </div>
-    <div className="text-[#8b949e] flex-1 truncate px-4">{message}</div>
-    <div className="text-[#8b949e] text-right whitespace-nowrap">{time}</div>
-  </div>
-);
+  );
+};
 
 const RepoActionButton = ({ icon, label, count }: RepoActionButtonProps) => (
   <div className="flex items-center border border-[#30363d] rounded-md overflow-hidden text-xs font-semibold shadow-sm">
@@ -270,5 +257,4 @@ const RepoActionButton = ({ icon, label, count }: RepoActionButtonProps) => (
     <span className="bg-[#161b22] px-3 py-1.5 text-[#8b949e]">{count}</span>
   </div>
 );
-
 export default GithubRepo;

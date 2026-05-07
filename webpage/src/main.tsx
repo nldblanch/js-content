@@ -1,25 +1,25 @@
-import "./index.css";
-import { Suspense } from "react";
-import { createRoot } from "react-dom/client";
-import { createBrowserRouter, Link, RouterProvider } from "react-router";
-import { RootLayout, Home, Instructions, GettingStarted } from "@src/pages";
-import routes from "@src/routes";
-import { BASE_URL, CLI_FEATURE_FLAG } from "./config";
-import { Loader } from "./ui/Loader";
-import { lazyWithMinDelay } from "./utils/lazy";
+import './index.css';
+import { Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, Link, RouterProvider } from 'react-router';
+import { RootLayout, Home, Instructions, GettingStarted } from '@src/pages';
+import routes from '@src/routes';
+import { BASE_URL, CLI_FEATURE_FLAG } from './config';
+import { Loader } from './ui/Loader';
+import { lazyWithMinDelay } from './utils/lazy';
 
-const CLI = lazyWithMinDelay(() => import("./CLI"), 500);
+const CLI = lazyWithMinDelay(() => import('./CLI'), 500);
 
-const basename = BASE_URL === "/" ? undefined : BASE_URL.replace(/\/$/, "");
+const basename = BASE_URL === '/' ? undefined : BASE_URL.replace(/\/$/, '');
 
 const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: '/',
       element: <RootLayout />,
       children: [
         {
-          path: "/",
+          path: '/',
           element: <Home />,
         },
         {
@@ -36,22 +36,18 @@ const router = createBrowserRouter(
         },
         ...(CLI_FEATURE_FLAG
           ? [
-            {
-              path: routes.CLI.path,
-              element: (
-                <Suspense
-                  fallback={
-                    <Loader />
-                  }
-                >
-                  <CLI />
-                </Suspense>
-              ),
-            },
-          ]
+              {
+                path: routes.CLI.path,
+                element: (
+                  <Suspense fallback={<Loader />}>
+                    <CLI />
+                  </Suspense>
+                ),
+              },
+            ]
           : []),
         {
-          path: "*",
+          path: '*',
           element: (
             <div className="w-full h-full flex flex-col items-center justify-center gap-4">
               <h1>404 Not Found</h1>
@@ -66,7 +62,7 @@ const router = createBrowserRouter(
   { basename },
 );
 
-const rootEl = document.getElementById("root");
+const rootEl = document.getElementById('root');
 if (!rootEl) throw new Error('Root element "#root" not found');
 
 createRoot(rootEl).render(<RouterProvider router={router} />);
