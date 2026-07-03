@@ -49,7 +49,7 @@ describe('InstructionsPage', () => {
     renderAt('/instructions');
 
     expect(screen.getByText('Instructions')).toBeInTheDocument();
-    expect(screen.getByText(/No docs markdown found/i)).toBeInTheDocument();
+    expect(screen.getByText(/No docs found/i)).toBeInTheDocument();
   });
 
   test('renders repo README on overview route', () => {

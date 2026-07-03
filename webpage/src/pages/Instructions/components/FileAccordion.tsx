@@ -67,8 +67,9 @@ export const FileAccordion = ({
         <NavLink
           to={`/instructions/${slug}`}
           onClick={() => !open && setOpen(true)}
-          className={`flex-1 font-fira text-xl truncate transition-colors ${isParentActive ? 'text-[#FF9C56]' : 'text-gray group-hover:text-white'
-            }`}
+          className={`flex-1 font-fira text-xl truncate transition-colors ${
+            isParentActive ? 'text-[#FF9C56]' : 'text-gray group-hover:text-white'
+          }`}
           style={{ fontWeight: isParentActive ? 700 : 400 }}
         >
           {title}

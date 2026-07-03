@@ -107,7 +107,7 @@ const GithubRepo = ({ onNavigateToIndex }: RepoViewProps) => {
         <div className="flex items-center gap-2 text-xl">
           <Book size={18} className="text-[#8b949e]" />
           <button
-            type='button'
+            type="button"
             className="text-[#58a6ff] hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
             onClick={onNavigateToIndex}
           >

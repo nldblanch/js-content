@@ -36,15 +36,15 @@ const router = createBrowserRouter(
         },
         ...(CLI_FEATURE_FLAG
           ? [
-            {
-              path: routes.CLI.path,
-              element: (
-                <Suspense fallback={<Loader />}>
-                  <CLI />
-                </Suspense>
-              ),
-            },
-          ]
+              {
+                path: routes.CLI.path,
+                element: (
+                  <Suspense fallback={<Loader />}>
+                    <CLI />
+                  </Suspense>
+                ),
+              },
+            ]
           : []),
         {
           // If path does not match any of the above, render error page
