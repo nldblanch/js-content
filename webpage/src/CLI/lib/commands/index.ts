@@ -1,8 +1,8 @@
 // Imports
-import * as shell from "./shell";
-import * as git from "./git/index";
-import type { CommandContext, CommandFn } from "@CLI/types.ts";
-import { useChallengeStore } from "@CLI/store/useChallengeStore.ts";
+import * as shell from './shell';
+import * as git from './git/index';
+import type { CommandContext, CommandFn } from '@CLI/types.ts';
+import { useChallengeStore } from '@CLI/store/useChallengeStore.ts';
 
 /**
  * Register command modules to be accessible within the environment.
@@ -19,13 +19,13 @@ const registry: Record<string, CommandFn> = {
   git: git.main, // One entry point for the whole git module
 
   // Help System
-  help: async () => `Available commands: ${Object.keys(registry).join(", ")}`,
+  help: async () => `Available commands: ${Object.keys(registry).join(', ')}`,
 
   // Debugging
   clearfs: shell.clearFS,
 };
 
-const COMMANDS_WITH_SUBCOMMANDS = ["git", "npm", "node"];
+const COMMANDS_WITH_SUBCOMMANDS = ['git', 'npm', 'node'];
 
 /**
  * Dispatch a command from a given input string.
@@ -35,23 +35,21 @@ const COMMANDS_WITH_SUBCOMMANDS = ["git", "npm", "node"];
  */
 export async function dispatchCommand(input: string): Promise<string> {
   const { cmd, subcmd, ctx } = parseInput(input);
-  if (!cmd) return "";
+  if (!cmd) return '';
 
   const handler = registry[cmd];
   if (!handler) return `Command not found: ${cmd}.`;
 
   try {
     // If the command has a subcmd, pass it in the context. Otherwise, just pass the context
-    const result = subcmd
-      ? await handler({ ...ctx, subcmd })
-      : await handler(ctx);
+    const result = subcmd ? await handler({ ...ctx, subcmd }) : await handler(ctx);
 
     // Re-evaluate challenge completion after every command
     await useChallengeStore.getState().runChecks();
 
     return result;
   } catch (err: unknown) {
-    return `Error: ${(err as Error).message || "Failed to execute command"}`;
+    return `Error: ${(err as Error).message || 'Failed to execute command'}`;
   }
 }
 
@@ -69,10 +67,10 @@ function parseInput(input: string): {
   const matches = input.match(/[^\s"']+|"([^"]*)"|'([^']*)'/g) || [];
 
   // Clean up single and double quotes.
-  const parts = matches.map((m) => m.replace(/^['"]|['"]$/g, ""));
+  const parts = matches.map((m) => m.replace(/^['"]|['"]$/g, ''));
 
   // Extract command (first part) and normalize to lowercase. If no parts, default to empty string.
-  const cmd = parts.shift()?.toLowerCase() || "";
+  const cmd = parts.shift()?.toLowerCase() || '';
   let subcmd: string | null = null;
 
   const flags: Record<string, boolean | string> = {};
@@ -83,14 +81,14 @@ function parseInput(input: string): {
 
   parts.forEach((part) => {
     // Process flags into a key-value object. E.g --color=red => { color: "red" }, or --a => { a: true }
-    if (part.startsWith("--")) {
-      const [key, value] = part.replace("--", "").split("=");
+    if (part.startsWith('--')) {
+      const [key, value] = part.replace('--', '').split('=');
       flags[key] = value ?? true;
-    } else if (part.startsWith("-") && part.length > 1) {
+    } else if (part.startsWith('-') && part.length > 1) {
       // Handles -la as { l: true, a: true }
       part
         .slice(1)
-        .split("")
+        .split('')
         .forEach((char) => (flags[char] = true));
     }
     // Only capture a subcmd if the command is allowed to have one

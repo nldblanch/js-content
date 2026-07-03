@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { challenges } from "@CLI/lib/challenges";
-import { useChallengeStore } from "@CLI/store/useChallengeStore";
-import { useAppStore } from "@CLI/store/useAppStore";
-import { CheckCircle2, Circle, ChevronRight, Lightbulb } from "lucide-react";
+import { useEffect } from 'react';
+import { challenges } from '@CLI/lib/challenges';
+import { useChallengeStore } from '@CLI/store/useChallengeStore';
+import { useAppStore } from '@CLI/store/useAppStore';
+import { CheckCircle2, Circle, ChevronRight, Lightbulb } from 'lucide-react';
 
 export default function Challenges() {
   const results = useChallengeStore((state) => state.results);
@@ -11,7 +11,7 @@ export default function Challenges() {
 
   // Set the browser URL when this page becomes the active tab
   useEffect(() => {
-    useAppStore.getState().setBrowserUrl("https://localhost:3000/home");
+    useAppStore.getState().setBrowserUrl('https://localhost:3000/home');
   }, []);
 
   // Re-run checks on mount and whenever gitRevision changes
@@ -24,18 +24,16 @@ export default function Challenges() {
     <div className="p-6 max-w-4xl">
       <h1 className="text-2xl font-bold mb-2">Welcome to GitSim!</h1>
       <p className="text-sm text-slate-600 mb-6">
-        This tool is designed to get you familiar with basic shell commands and
-        learning how to safely work within a Git-based repository. Complete the
-        challenges below using the terminal on the right. Your progress is
-        tracked automatically!
+        This tool is designed to get you familiar with basic shell commands and learning how to safely work within a
+        Git-based repository. Complete the challenges below using the terminal on the right. Your progress is tracked
+        automatically!
       </p>
 
       <div className="grid gap-5">
         <div className="px-4 py-2 bg-red-200 rounded-lg shadow-md">
           <p className="font-semibold">
-            DEBUGGING: Run the command{" "}
-            <code className="bg-red-100 px-1 rounded">clearFs</code> to reset
-            the file system and remote repo.
+            DEBUGGING: Run the command <code className="bg-red-100 px-1 rounded">clearFs</code> to reset the file system
+            and remote repo.
           </p>
         </div>
 
@@ -69,22 +67,12 @@ interface ChallengeCardProps {
   isComplete: boolean;
 }
 
-function ChallengeCard({
-  challenge,
-  stepResults,
-  completedCount,
-  totalSteps,
-  isComplete,
-}: ChallengeCardProps) {
+function ChallengeCard({ challenge, stepResults, completedCount, totalSteps, isComplete }: ChallengeCardProps) {
   return (
     <div
       className={`
       p-4 rounded-lg border transition-colors
-      ${
-        isComplete
-          ? "bg-emerald-50 border-emerald-300"
-          : "bg-slate-50 border-slate-200"
-      }
+      ${isComplete ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200'}
     `}
     >
       {/* Header */}
@@ -99,9 +87,7 @@ function ChallengeCard({
         </h3>
         <span
           className={`text-xs font-mono px-2 py-1 rounded-full ${
-            isComplete
-              ? "bg-emerald-200 text-emerald-800"
-              : "bg-slate-200 text-slate-600"
+            isComplete ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-200 text-slate-600'
           }`}
         >
           {completedCount}/{totalSteps}
@@ -109,9 +95,7 @@ function ChallengeCard({
       </div>
 
       {/* Description */}
-      <p className="text-sm text-slate-600 mb-3 ml-7">
-        {challenge.description}
-      </p>
+      <p className="text-sm text-slate-600 mb-3 ml-7">{challenge.description}</p>
 
       {/* Steps */}
       <div className="space-y-1.5 ml-7">
@@ -122,15 +106,7 @@ function ChallengeCard({
             ) : (
               <Circle size={16} className="text-slate-300 shrink-0" />
             )}
-            <span
-              className={
-                stepResults[i]
-                  ? "text-slate-500 line-through"
-                  : "text-slate-700"
-              }
-            >
-              {step.label}
-            </span>
+            <span className={stepResults[i] ? 'text-slate-500 line-through' : 'text-slate-700'}>{step.label}</span>
           </div>
         ))}
       </div>

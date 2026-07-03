@@ -13,9 +13,7 @@ interface ChallengeState {
 }
 
 export const useChallengeStore = create<ChallengeState>((set) => ({
-  results: Object.fromEntries(
-    challenges.map(c => [c.id, c.steps.map(() => false)])
-  ),
+  results: Object.fromEntries(challenges.map((c) => [c.id, c.steps.map(() => false)])),
 
   runChecks: async () => {
     const updated: Record<string, boolean[]> = {};
@@ -30,10 +28,10 @@ export const useChallengeStore = create<ChallengeState>((set) => ({
             } catch {
               return false;
             }
-          })
+          }),
         );
         updated[challenge.id] = stepResults;
-      })
+      }),
     );
 
     set({ results: updated });

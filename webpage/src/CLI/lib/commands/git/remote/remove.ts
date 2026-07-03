@@ -1,5 +1,5 @@
-import git from "isomorphic-git";
-import fs from "@CLI/lib/fileSystem.ts";
+import git from 'isomorphic-git';
+import fs from '@CLI/lib/fileSystem.ts';
 
 export async function remove(dir: string, args: string[]): Promise<string> {
   const remoteName = args[1];
@@ -7,7 +7,7 @@ export async function remove(dir: string, args: string[]): Promise<string> {
 
   try {
     await git.deleteRemote({ fs, dir, remote: remoteName });
-    return "";
+    return '';
   } catch {
     return `error: No such remote: '${remoteName}'`;
   }

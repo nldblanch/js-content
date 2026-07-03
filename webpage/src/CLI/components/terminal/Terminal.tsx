@@ -1,13 +1,13 @@
-import { Terminal as XTerm } from "@xterm/xterm";
-import "@xterm/xterm/css/xterm.css";
-import { FitAddon } from "@xterm/addon-fit";
-import { useEffect, useRef } from "react";
-import { dispatchCommand } from "@CLI/lib/commands/index.ts";
-import { getCwd } from "@CLI/store/useTerminalStore.ts";
+import { Terminal as XTerm } from '@xterm/xterm';
+import '@xterm/xterm/css/xterm.css';
+import { FitAddon } from '@xterm/addon-fit';
+import { useEffect, useRef } from 'react';
+import { dispatchCommand } from '@CLI/lib/commands/index.ts';
+import { getCwd } from '@CLI/store/useTerminalStore.ts';
 
 function Terminal() {
   const terminalRef = useRef<HTMLDivElement>(null); // Ref to hold the terminal instance
-  const primaryPrompt = "user@cli-emu:";
+  const primaryPrompt = 'user@cli-emu:';
 
   // Wait for DOM to be fully loaded before component mount.
   useEffect(() => {
@@ -22,23 +22,19 @@ function Terminal() {
     terminal.write(`Welcome to GitSim!\r\n${primaryPrompt}/home/user$ `);
 
     // xterm handles its own state, a persistent input buffer is fine
-    let inputBuffer = "";
+    let inputBuffer = '';
 
     // xterm has its own event system for handling user input
     terminal.onData(async (data) => {
-      if (data.includes("\r")) {
+      if (data.includes('\r')) {
         // Check for Enter key (carriage return)
         const result = await dispatchCommand(inputBuffer);
-        terminal.write(
-          result
-            ? `\r\n${result}\r\n${primaryPrompt}${getCwd()}$ `
-            : `\r\n${primaryPrompt}${getCwd()}$ `,
-        );
-        inputBuffer = "";
-      } else if (data.includes("\u007F")) {
+        terminal.write(result ? `\r\n${result}\r\n${primaryPrompt}${getCwd()}$ ` : `\r\n${primaryPrompt}${getCwd()}$ `);
+        inputBuffer = '';
+      } else if (data.includes('\u007F')) {
         // If backspace, slice last char
         inputBuffer = inputBuffer.slice(0, -1);
-        terminal.write("\b \b"); // Move back, write space to erase, move back again
+        terminal.write('\b \b'); // Move back, write space to erase, move back again
       } else {
         // For other input, just append to buffer
         inputBuffer += data;
