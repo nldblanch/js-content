@@ -23,6 +23,47 @@ export function getOrderFromPath(path: string): number {
   return getOrderFromFolder(folder);
 }
 
+function extractSolutionSections(markdown: string): string {
+  const lines = markdown.split('\n');
+  const sections: string[] = [];
+
+  let index = 0;
+
+  while (index < lines.length) {
+    const headingMatch = lines[index].match(/^(#{2,6})\s+.*solution.*$/i);
+
+    if (!headingMatch) {
+      index += 1;
+      continue;
+    }
+
+    const headingLevel = headingMatch[1].length;
+    const start = index;
+    index += 1;
+
+    let inCodeFence = false;
+
+    while (index < lines.length) {
+      const currentLine = lines[index];
+
+      if (currentLine.trim().startsWith('```')) {
+        inCodeFence = !inCodeFence;
+      }
+
+      const nextHeading = currentLine.match(/^(#{1,6})\s+/);
+      if (!inCodeFence && nextHeading && nextHeading[1].length <= headingLevel) {
+        break;
+      }
+
+      index += 1;
+    }
+
+    sections.push(lines.slice(start, index).join('\n').trim());
+  }
+
+  return sections.join('\n\n');
+}
+
 export function getFileNameFromPath(path: string): string {
   const normalized = path.replace(/\\/g, '/');
   return normalized.split('/').slice(-1)[0] ?? 'unknown.md';
@@ -82,12 +123,34 @@ export function buildChallengeInstructions(modules: GlobModules): ChallengeInstr
 
   const items: ChallengeInstruction[] = Array.from(docsByDir.entries()).map(([slug, files]) => {
     const sortedFiles = [...files].sort((a, b) => sortFiles(a.fileName, b.fileName));
+    const instructionsFile = sortedFiles.find((f) => f.title.toLowerCase() === 'instructions');
+    const solutionFile = sortedFiles.find((f) => f.title.toLowerCase() === 'solution');
+
+    const extractedSolution = instructionsFile ? extractSolutionSections(instructionsFile.markdown) : '';
+
+    const normalizedFiles = [...sortedFiles];
+
+    if (solutionFile) {
+      const solutionIndex = normalizedFiles.indexOf(solutionFile);
+      if (solutionIndex >= 0 && !solutionFile.markdown.trim() && extractedSolution) {
+        normalizedFiles[solutionIndex] = {
+          ...solutionFile,
+          markdown: extractedSolution,
+        };
+      }
+    } else if (extractedSolution) {
+      normalizedFiles.push({
+        fileName: 'solution.md',
+        title: 'solution',
+        markdown: extractedSolution,
+      });
+    }
 
     return {
       slug,
       title: formatFileName(slug),
       order: getOrderFromFolder(slug),
-      files: sortedFiles.map((f) => ({ title: f.title, markdown: f.markdown })),
+      files: normalizedFiles.map((f) => ({ title: f.title, markdown: f.markdown })),
     };
   });
 

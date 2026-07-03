@@ -6,6 +6,7 @@ import { FileAccordion } from './FileAccordion';
 
 function renderWithRoute(
   ui: React.ReactNode,
+  // Change default to empty or a specific route
   { initialEntry = '/instructions/8-whale-talk' }: { initialEntry?: string } = {},
 ) {
   return render(
@@ -69,17 +70,16 @@ describe('FileAccordion', () => {
   });
 
   test('bolds the selected file when route matches and hash points to it', async () => {
-    window.location.hash = '#function-documentation';
-
     renderWithRoute(<FileAccordion title="whale talk" slug="8-whale-talk" files={files} />, {
-      initialEntry: '/instructions/8-whale-talk',
+      initialEntry: '/instructions/8-whale-talk#function-documentation',
     });
 
     const user = userEvent.setup();
-
     await user.click(screen.getByRole('button'));
 
-    const selectedLink = screen.getByRole('link', { name: 'function documentation' });
+    const selectedLink = screen.getByRole('link', {
+      name: 'function documentation',
+    });
     expect(selectedLink).toHaveStyle('font-weight: 700');
 
     const unselectedLink = screen.getByRole('link', { name: 'solution' });

@@ -10,10 +10,15 @@ const Banner = () => {
   return (
     <div className="w-full bg-black-700 flex justify-between items-center px-4 py-2">
       <WindowControlButtons />
-      <Heading className="font-mono font-semibold text-gray" text="JavaScript Content" />
+      <Heading
+        className="font-mono font-semibold text-gray"
+        text="
+        JavaScript Content
+      "
+      />
       <div className="flex gap-4 justify-between">
-        <img src={getAsset('sunshine.svg')} className="h-6 aspect-square" alt="Theme" />
-        <img src={getAsset('help.svg')} className="h-6 aspect-square" alt="Help" />
+        <img src={getAsset('sunshine.svg')} className="h-6 aspect-square cursor-pointer" alt="Theme" />
+        <img src={getAsset('help.svg')} className="h-6 aspect-square cursor-pointer" alt="Help" />
       </div>
     </div>
   );

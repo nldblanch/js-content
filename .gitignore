@@ -3,3 +3,5 @@ coverage
 
 webpage/.env
 .vscode/
+
+.DS_Store

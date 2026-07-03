@@ -95,6 +95,32 @@ describe('buildChallengeInstructions', () => {
     expect(items[1]?.files.map((f) => f.title)).toEqual(['readme', 'function documentation', 'solution']);
     expect(items[1]?.files.map((f) => f.markdown)).toEqual(['read2', 'func2', 'sol2']);
   });
+
+  test('creates a solution file from inline solution sections when no solution.md exists', () => {
+    const modules: Record<string, string> = {
+      '../../../../docs/01-intro/instructions.md': [
+        '# Intro',
+        '',
+        '### Solution',
+        '',
+        '<details>',
+        '<summary>Reveal</summary>',
+        '',
+        '```javascript',
+        'const answer = 42;',
+        '```',
+        '',
+        '</details>',
+      ].join('\n'),
+      '../../../../docs/01-intro/readme.md': 'read1',
+    };
+
+    const items = buildChallengeInstructions(modules);
+
+    expect(items).toHaveLength(1);
+    expect(items[0]?.files.map((f) => f.title)).toEqual(['instructions', 'readme', 'solution']);
+    expect(items[0]?.files.find((f) => f.title === 'solution')?.markdown).toContain('const answer = 42;');
+  });
 });
 describe('useChallengeInstructions (hook)', () => {
   test('returns built instructions and memoizes the glob call', () => {

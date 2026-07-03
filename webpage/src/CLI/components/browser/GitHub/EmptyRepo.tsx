@@ -7,7 +7,7 @@ const EmptyState = ({ openForm }: Props) => {
     <div className="bg-[#0d1117] min-h-full text-[#c9d1d9] p-8 font-sans">
       <div className="max-w-3xl mx-auto border border-[#30363d] rounded-md p-8 bg-[#161b22]">
         <h2 className="text-xl font-semibold mb-4 text-[#f0f6fc]">
-          Quick setup — if you’ve done this kind of thing before
+          Quick setup - if you&apos;ve done this kind of thing before
         </h2>
         <div className="bg-[#0d1117] p-4 rounded-md border border-[#30363d] mb-6 font-mono text-sm leading-relaxed">
           <p>
@@ -28,7 +28,7 @@ const EmptyState = ({ openForm }: Props) => {
           <p>git commit -m &quot;first commit&quot;</p>
         </div>
 
-        <h3 className="font-semibold mb-4">...don&quot;t want to use the CLI? Use the web interface instead!</h3>
+        <h3 className="font-semibold mb-4">...do not want to use the CLI? Use the web interface instead!</h3>
         <button
           onClick={openForm}
           className="bg-[#238636] hover:bg-[#2ea043] disabled:opacity-50 disabled:bg-[#238636] text-white px-5 py-2 rounded-md font-semibold transition-colors shadow-sm cursor-pointer"

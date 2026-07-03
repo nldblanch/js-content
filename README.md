@@ -73,11 +73,12 @@ Each challenge is in its own directory with:
 
 <br />
 
-_\*This challenge is still in the Proof of Concept stage. There may be problems or inconsistencies._
+_\\*This challenge is still in the Proof of Concept stage. There may be problems or inconsistencies._
 
 _\*\*These challenges have not been migrated to the new format yet. Please refer to the pdf_instructions._
 
 [Back to top](#top)
+
 
 ## How to Use
 
@@ -88,6 +89,7 @@ _\*\*These challenges have not been migrated to the new format yet. Please refer
 5. All tests should pass when your solution is correct
 
 [Back to top](#top)
+
 
 ## Testing
 
@@ -103,23 +105,29 @@ _You can also shorten this command to `npm t`._
 
 ### Run test by filename
 
+
 You can run the tests of a specific test by including the filename.
+
 
 ```bash
 npm test temperature.test.js
 ```
 
+
 ### Run tests by pattern
+
 
 Pass a pattern to run only matching tests. Examples:
 
 - Match a short pattern (matches `race.test.js` and `rockPaperScissors.test.js`):
+
 
 ```bash
 npm test r
 ```
 
 - Run all tests in challenge 1 (Temperature):
+
 
 ```bash
 npm test 1
@@ -131,11 +139,14 @@ npm test 1
 npm run test:watch
 ```
 
+
 _Other npm scripts (those with custom names) must be invoked with `npm run <script>`._
 
 [Back to top](#top)
 
+
 ## Contributing to webpage (as a developer)
+
 
 ### ESLint and Prettier
 
@@ -173,6 +184,7 @@ npm run format
 
 1. From repo root, change directory to `webpage` directory
 
+
 ```bash
 cd  webpage
 ```
@@ -185,17 +197,33 @@ npm install
 
 3. Start local development server
 
+You have two options:
+
+**Option A: Standard Development Server**
+
+
 ```bash
 npm run dev
 ```
 
-Local development server should start on `http://localhost:5173/`
+
+Starts a development server at `http://localhost:5173/`.
+
+**Option B: Development Server with CLI Enabled**
+
+```bash
+npm run dev:cli
+```
+
+Starts a development server at `http://localhost:5173/` with the CLI tool enabled.
 
 4. Run tests and see code coverage
+
 
 ```bash
 npm run coverage
 ```
+
 
 Code coverage will be outputted to `webpage/coverage/` directory.
 
@@ -205,7 +233,7 @@ Code coverage will be outputted to `webpage/coverage/` directory.
 
 **For a more detailed guide, see [Microsoft’s official documentation on debugging React](https://code.visualstudio.com/docs/nodejs/reactjs-tutorial#_debugging-react)**
 
-_Note that, as a complement to debugging in VSCode, the [React Developer Tools browser extension](https://microsoftedge.microsoft.com/addons/detail/react-developer-tools/gpphkfbcpidddadnkolkpfckpihlkkil) is recommended. The component view, for example, allows you to interact with the component tree while viewing the React app as it is rendered to the browser._
+_Note that, as a complement to debugging in VSCode, the [React Developer Tools browser extension](https://microsoftedge.microsoft.com/addons/detail/react-developer-tools/gpphkfbcpidddadnkolkpfckpihlkkil) is recommended. The extension's component view, for example, allows you to interact with the component tree while viewing the React app as it is rendered to the browser._
 
 1. On VSCode, open any TypeScript (.tsx) file in `webpage/src`.
 
